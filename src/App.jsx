@@ -7,7 +7,7 @@ import CreateSong from './components/CreateSong/CreateSong'
 import SingleSong from './components/SingleSong/SingleSong'
 import UpdateSong from './components/UpdateSong/UpdateSong'
 import NavBar from './components/NavBar/NavBar'
-
+import Login from './components/Login/Login'
 
 function App() {
   return (
@@ -21,6 +21,7 @@ function App() {
           <Route path="/songs/:id/update" element={<UpdateSong />} />
         </Route>
         <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<Login />} />
       </Routes>
     </>
   )
