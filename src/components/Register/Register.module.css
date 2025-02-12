@@ -1,11 +1,11 @@
 /* General body styling for light background */
-body {
+.main {
   background-color: #f7f7f7;
   color: var(--text-primary);
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
