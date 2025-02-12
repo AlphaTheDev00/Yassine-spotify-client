@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router";
-//import { login } from "../../services/userService";
-//import { setToken } from "../../utils/auth";
-//import { getUserFromToken } from "../../utils/auth";
+import { login } from "../../services/userService";
+import { setToken } from "../../utils/auth";
+import { getUserFromToken } from "../../utils/auth";
 import { UserContext } from "../../contexts/UserContext";
 import styles from "./Login.module.css";
 
@@ -10,7 +10,7 @@ export default function Login() {
   const { setUser } = useContext(UserContext);
 
   const [formData, setFormData] = useState({
-    email: "",
+    identifier: "",
     password: "",
   });
 
@@ -49,16 +49,18 @@ export default function Login() {
       <form onSubmit={handleSubmit}>
         {/* Email */}
         <div className="input-control">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="identifier">Email or Username</label>
           <input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Enter your email"
+            type="identifier"
+            name="identifier"
+            id="identifier"
+            placeholder="Enter your email or username"
             required
             onChange={handleChange}
           />
-          {errors.email && <p className="error-message">{errors.email}</p>}
+          {errors.identifier && (
+            <p className="error-message">{errors.identifier}</p>
+          )}
         </div>
 
         {/* Password */}
