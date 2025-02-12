@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./Register.module.css";
+import { signup } from "../../services/userService.js";
 
 export default function Register() {
 
@@ -8,12 +9,18 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: "",
+    isArtist: false
   });
 
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const data = await signup(formData)
+    } catch (error) {
+      setErrors(error.response.data.errors)
+    }
   };
 
   const handleChange = (e) => {
