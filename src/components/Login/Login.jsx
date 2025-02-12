@@ -13,6 +13,9 @@ export default function Login() {
     e.preventDefault();
     try {
       const data = await signin(formData);
+      // 1. setToken to storage when we receive it in the response
+      // 2. Set the global user context to the user inside the token
+      // 3. Navigate to the home page
     } catch (error) {
       setErrors(error.response.data.message);
       console.log(error);

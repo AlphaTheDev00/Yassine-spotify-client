@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { getUserFromToken } from "../utils/auth"
 
 export const UserContext = createContext();
 
@@ -7,14 +8,10 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-
-  const login = (userData) => setUser(userData);
-
-  const logout = () => setUser(null);
+  const [user, setUser] = useState(getUserFromToken());
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );

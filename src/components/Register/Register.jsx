@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import styles from "./Register.module.css";
 import { signup } from "../../services/userService.js";
+import { setToken, getUserFromToken } from "../../utils/auth";
+import { UserContext } from "../../contexts/UserContext";
+import { useNavigate } from "react-router";
 
 export default function Register() {
+  const { user, setUser } = useContext(UserContext)
+  console.log(user)
 
   const [formData, setFormData] = useState({
     username: "",
@@ -14,12 +19,18 @@ export default function Register() {
 
   const [errors, setErrors] = useState({});
 
+  const navigate = useNavigate()
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = await signup(formData)
       // 1. Part of the response data above is "token". This needs to be set to local storage
+      setToken(data.token)
       // 2. Decode the token, setting the user inside to the global user state (context)
+      setUser(getUserFromToken())
+      // 3. navigate to home page on sign in
+      navigate('/')
     } catch (error) {
       setErrors(error.response.data.errors)
     }
