@@ -1,67 +1,50 @@
-import { useState, useContext } from "react";
-import { NavLink } from "react-router";
-import styles from "./Navbar.module.css";
-import { UserContext } from "../../contexts/UserContext";
-import { removeToken } from "../../utils/auth";
+import { NavLink, useLocation } from "react-router";
+import styles from "./NavBar.module.css";
+import { GoHome, GoHomeFill } from "react-icons/go";
+import { Avatar, Button } from "@chakra-ui/react";
 
 export default function NavBar() {
-  // Context
-  const { user, setUser } = useContext(UserContext);
+  const location = useLocation();
 
-  // State
-  const [show, setShow] = useState(false);
+  const user = null;
+  // {
+  //     username: "aaron1",
+  //     email: "aaron1@email.com",
+  //     // profileImage: "https://bit.ly/sage-adebayo",
+  //     isArtist: true
+  // }
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const signOut = () => {
-    removeToken();
-    setUser(null);
-  };
+  function logOut() {
+    alert("logging out");
+  }
 
   return (
-    <>
-      <button className={styles.menuButton} onClick={handleShow}>
-        <div></div>
-        <div></div>
-        <div></div>
-      </button>
-
-      {/* Sidebar */}
-      <div className={`${styles.menu} ${show ? styles.show : ""}`}>
-        <button className={styles.closeButton} onClick={handleClose}>
-          X
-        </button>
-
-        <div className={styles.menuContent}>
-          {user && (
-            <section>
-              <img src={user.profileImage} alt={user.displayName} />
-              <div>
-                <h2>{user.displayName}</h2>
-                <h3>@{user.username}</h3>
-              </div>
-            </section>
+    <nav className={styles.navbar}>
+      <div className={styles.homebutton}>
+        <NavLink to="/">
+          {location.pathname === "/" ? (
+            <GoHomeFill size={30} />
+          ) : (
+            <GoHome size={30} />
           )}
-
-          {/* Navigation Links */}
-          <nav>
-            <NavLink to="/">Home</NavLink>
-            {user ? (
-              <>
-                <NavLink to="/create-song">Create Song</NavLink>
-                <NavLink to="/create-playlist">Create Playlist</NavLink>
-                <button onClick={signOut}>Sign out</button>
-              </>
-            ) : (
-              <>
-                <NavLink to="/register">Register</NavLink>
-                <NavLink to="/login">Login</NavLink>
-              </>
-            )}
-          </nav>
-        </div>
+        </NavLink>
       </div>
-    </>
+      {user ? (
+        <div className={styles.authnav}>
+          <Button rounded="full" onClick={logOut}>
+            Log out
+          </Button>
+          <Avatar.Root>
+            <Avatar.Fallback name={user.username} />
+            <Avatar.Image src={user.profileImage} />
+          </Avatar.Root>
+        </div>
+      ) : (
+        <div className={styles.authnav}>
+          <NavLink to="/register">Register</NavLink>
+          <NavLink to="/login">Login</NavLink>
+        </div>
+      )}
+    </nav>
   );
 }
