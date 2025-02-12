@@ -7,13 +7,13 @@ export default function NavBar() {
 
     const location = useLocation()
 
-    const user = null
-    // {
-    //     username: "aaron1",
-    //     email: "aaron1@email.com",
-    //     // profileImage: "https://bit.ly/sage-adebayo",
-    //     isArtist: true
-    // }
+    const user = 
+    {
+        username: "aaron1",
+        email: "aaron1@email.com",
+        // profileImage: "https://bit.ly/sage-adebayo",
+        isArtist: true
+    }
 
     function logOut () {
         alert('logging out')
