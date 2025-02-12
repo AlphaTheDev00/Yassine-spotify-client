@@ -1,13 +1,7 @@
-import { useState, useContext } from "react";
-import { useNavigate } from "react-router";
-import { UserContext } from "../../contexts/UserContext"; // Context to manage user state
-// import { signup } from "../../api/authApi"; // Assuming signup function is in your API file
-// import { setToken } from "../../utils/auth"; // Utility to store JWT
-// import { getUserFromToken } from "../../utils/auth"; // Utility to get user from token
+import { useState } from "react";
 import styles from "./Register.module.css";
 
 export default function Register() {
-  const { setUser } = useContext(UserContext);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -17,36 +11,14 @@ export default function Register() {
   });
 
   const [errors, setErrors] = useState({});
-  const [isUploading, setIsUploading] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const data = await signup(formData);
-
-      setToken(data.token);
-      setUser(getUserFromToken());
-
-      navigate("/");
-    } catch (error) {
-      setErrors(error.response?.data?.errors || {});
-    }
   };
 
   const handleChange = (e) => {
     setErrors({ ...errors, [e.target.name]: "" });
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    if (e.target.name === "confirmPassword") {
-      if (e.target.value !== formData.password) {
-        setErrors({ ...errors, confirmPassword: "Passwords do not match" });
-      } else {
-        setErrors({ ...errors, confirmPassword: "" });
-      }
-    }
   };
 
   return (
@@ -117,11 +89,10 @@ export default function Register() {
           type="submit"
           disabled={
             formData.password === "" ||
-            formData.password !== formData.confirmPassword ||
-            isUploading
+            formData.password !== formData.confirmPassword
           }
         >
-          {isUploading ? "Registering..." : "Register"}
+          Register
         </button>
       </form>
     </section>
