@@ -36,9 +36,6 @@ export default function Login() {
             required
             onChange={handleChange}
           />
-          {errors.identifier && (
-            <p className="error-message">{errors.identifier}</p>
-          )}
         </div>
 
         {/* Password */}
@@ -52,12 +49,7 @@ export default function Login() {
             required
             onChange={handleChange}
           />
-          {errors.password && (
-            <p className="error-message">{errors.password}</p>
-          )}
         </div>
-
-        {errors.message && <p className="error-message">{errors.message}</p>}
 
         <button
           type="submit"

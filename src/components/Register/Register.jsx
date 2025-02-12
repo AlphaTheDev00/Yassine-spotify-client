@@ -18,6 +18,8 @@ export default function Register() {
     e.preventDefault();
     try {
       const data = await signup(formData)
+      // 1. Part of the response data above is "token". This needs to be set to local storage
+      // 2. Decode the token, setting the user inside to the global user state (context)
     } catch (error) {
       setErrors(error.response.data.errors)
     }
