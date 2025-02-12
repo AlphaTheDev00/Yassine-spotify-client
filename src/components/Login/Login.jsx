@@ -1,21 +1,27 @@
 import { useState } from "react";
 import styles from "./Login.module.css";
+import { signin } from "../../services/userService.js";
 
 export default function Login() {
-
   const [formData, setFormData] = useState({
     identifier: "",
     password: "",
   });
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    try {
+      const data = await signin(formData);
+    } catch (error) {
+      setErrors(error.response.data.message);
+      console.log(error);
+    }
   };
 
   // Handle input change
   const handleChange = (e) => {
+    setErrors("");
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -29,7 +35,7 @@ export default function Login() {
         <div className="input-control">
           <label htmlFor="identifier">Email or Username</label>
           <input
-            type="identifier"
+            type="text"
             name="identifier"
             id="identifier"
             placeholder="Enter your email or username"
@@ -50,10 +56,10 @@ export default function Login() {
             onChange={handleChange}
           />
         </div>
-
+        {errors && <p className="error-message">{errors}</p>}
         <button
           type="submit"
-          disabled={formData.email === "" || formData.password === ""}
+          disabled={formData.identifier === "" || formData.password === ""}
         >
           Login
         </button>
