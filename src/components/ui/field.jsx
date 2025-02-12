@@ -1,4 +1,3 @@
-import { Field as ChakraField } from '@chakra-ui/react'
 import * as React from 'react'
 
 export const Field = React.forwardRef(function Field(props, ref) {
