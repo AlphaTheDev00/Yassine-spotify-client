@@ -1,21 +1,32 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import styles from "./Login.module.css";
 import { signin } from "../../services/userService.js";
+import { setToken, getUserFromToken } from "../../utils/auth";
+import { UserContext } from "../../contexts/UserContext";
+import { useNavigate } from "react-router";
 
 export default function Login() {
+  const { user, setUser } = useContext(UserContext);
+  console.log(user);
+
   const [formData, setFormData] = useState({
     identifier: "",
     password: "",
   });
   const [errors, setErrors] = useState("");
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = await signin(formData);
       // 1. setToken to storage when we receive it in the response
+      setToken(data.token);
       // 2. Set the global user context to the user inside the token
+      setUser(getUserFromToken());
       // 3. Navigate to the home page
+      navigate("/");
     } catch (error) {
       setErrors(error.response.data.message);
       console.log(error);
