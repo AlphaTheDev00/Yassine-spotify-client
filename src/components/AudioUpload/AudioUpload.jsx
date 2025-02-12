@@ -6,6 +6,10 @@ export default function AudioUpload({ setFormData, isUploading, setIsUploading, 
     async function handleUpload(event) {
         setErrors({...errors, audio_url: ''})
         setIsUploading(true)
+        setFormData(formData => ({
+            ...formData,
+            audio_url: '',
+        }))
         const audioFile = event.target.files[0]
         try {
             const { data } = await axios.postForm(import.meta.env.VITE_CLOUDINARY_AUDIO_UPLOAD_URL, {

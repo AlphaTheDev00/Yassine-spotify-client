@@ -6,7 +6,7 @@ import { useNavigate } from "react-router"
 
 export default function CreateSong() {
 
-    const user = 
+    const user =
     {
         username: "aaron1",
         email: "aaron1@email.com",
@@ -34,7 +34,7 @@ export default function CreateSong() {
 
     function handleChange(event) {
         setFormData({ ...formData, [event.target.name]: event.target.value })
-        setErrors({...errors, [event.target.name]: ''})
+        setErrors({ ...errors, [event.target.name]: '' })
     }
 
     async function handleSubmit(event) {
@@ -51,13 +51,12 @@ export default function CreateSong() {
     }
 
     return (
-        <>
+        <div className={styles.container}>
             <h1 className={styles.pageTitle}>Create A Song</h1>
-
-            <form onSubmit={handleSubmit} className={styles.container}>
+            <form onSubmit={handleSubmit} >
                 <div>
                     <label htmlFor="title">Title: </label>
-                    <input type="text" name="title" id='title' value={formData.title} onChange={handleChange} />
+                    <input type="text" name="title" id='title' value={formData.title} onChange={handleChange} placeholder="Please enter a title" />
                     {errors.title && <p className={styles.errorMessage}>{errors.title}</p>}
                 </div>
 
@@ -73,6 +72,6 @@ export default function CreateSong() {
 
                 <button type="submit" disabled={!formData.title || !formData.audio_url || isUploading}>Create Song</button>
             </form>
-        </>
+        </div>
     )
 }
