@@ -71,7 +71,7 @@
 }
 
 .container button:hover:not(:disabled) {
-    background-color: #2980b9;
+    background-color: var(--chakra-colors-green-700);;
     cursor: pointer;
 }
 
