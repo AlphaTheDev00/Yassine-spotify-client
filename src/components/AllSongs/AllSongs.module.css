@@ -1,0 +1,80 @@
+.songsContainer {
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #121212;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heading {
+  font-size: 28px;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+.songGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  justify-content: center;
+  width: 90%;
+  max-width: 1200px;
+}
+
+.songCard {
+  background-color: #181818;
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.songCard:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.songCover {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.songCard:hover .songCover {
+  transform: rotate(5deg);
+  opacity: 0.85;
+}
+
+.songInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-top: 10px;
+}
+
+.createdBy {
+  font-size: 13px;
+  color: #888;
+  margin-top: 5px;
+}
+
+.createdBy span {
+  color: #1db954;
+  font-weight: bold;
+}
