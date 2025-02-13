@@ -1,33 +1,54 @@
 .navbar {
-    height: 60px;
-    background: red;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  height: 60px;
+  background: var(--chakra-colors-green-600);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--bg-currentcolor);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 .homebutton {
-    background-color: darkgrey;
-    color: aliceblue;
-    padding: 5px;
-    border-radius: 25%;
-    margin-left: 10px;
+  color: white;
+  padding: 5px;
+  border-radius: 25%;
+  margin-left: 10px;
+  transition: transform 0.2s ease-in-out;
+  text-decoration: none;
 }
-
+.homebutton:hover {
+  transform: scale(1.1);
+}
+.authButton {
+  color: var(--chakra-colors-bg-inverted);
+  cursor: pointer;
+}
 .authnav {
-    display: flex;
-    justify-content: space-around;
-    column-gap: 10px;
-    margin-right: 10px;
+  display: flex;
+  justify-content: space-around;
+  column-gap: 20px;
+  margin-right: 20px;
 }
-
 .authnav a {
-    height: 40px;
-    background: green;
-    padding: 0 20px;
-    border-radius: 999px;
-    font-size: large;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
+  height: 40px;
+  font-size: large;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+.authnav a:hover {
+  color: var(--chakra-colors-bg);
+}
+.authnav button {
+  background-color: var(--chakra-colors-color-palette-muted);
+  color: var(--chakra-colors-color-palette-fg);
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+.authnav button:hover {
+  background-color: var(--chakra-colors-gray-subtle);
 }

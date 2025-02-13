@@ -1,5 +1,3 @@
-export default function SingleSong () {
-    return (
-        <h1>SingleSong</h1>
-    )
+export default function SingleSong() {
+  return <h1>SingleSong</h1>;
 }
