@@ -17,3 +17,5 @@ export async function songCreate(formData) {
     }
     
 }
+
+export const getAllSongs = () => axios.get(BASE_URL);

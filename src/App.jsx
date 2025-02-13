@@ -1,30 +1,30 @@
-import { Route, Routes } from 'react-router'
-import './App.css'
-import MainLayout from './components/MainLayout/MainLayout'
-import Register from './components/Register/Register'
-import AllSongs from './components/AllSongs/AllSongs'
-import CreateSong from './components/CreateSong/CreateSong'
-import SingleSong from './components/SingleSong/SingleSong'
-import UpdateSong from './components/UpdateSong/UpdateSong'
-import NavBar from './components/NavBar/NavBar'
-import Login from './components/Login/Login'
+import { Route, Routes } from "react-router";
+import "./App.css";
+import MainLayout from "./components/MainLayout/MainLayout";
+import Register from "./components/Register/Register";
+import AllSongs from "./components/AllSongs/AllSongs";
+import CreateSong from "./components/CreateSong/CreateSong";
+import SingleSong from "./components/SingleSong/SingleSong";
+import UpdateSong from "./components/UpdateSong/UpdateSong";
+import NavBar from "./components/NavBar/NavBar";
+import Login from "./components/Login/Login";
 
 function App() {
   return (
     <>
       <NavBar />
       <Routes>
-        <Route element={<MainLayout />} >
+        <Route element={<MainLayout />}>
           <Route path="/" element={<AllSongs />} />
           <Route path="/songs/new" element={<CreateSong />} />
           <Route path="/songs/:id" element={<SingleSong />} />
           <Route path="/songs/:id/update" element={<UpdateSong />} />
         </Route>
-        <Route path='/register' element={<Register />} />
-        <Route path='/login' element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
