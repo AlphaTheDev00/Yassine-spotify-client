@@ -19,7 +19,7 @@ export default function AudioUpload({ setFormData, isUploading, setIsUploading, 
             setFormData(formData => ({
                 ...formData,
                 audio_url: data.secure_url,
-                duration: Math.floor(data.duration / 60)
+                duration: data.duration
             }))
 
         } catch {

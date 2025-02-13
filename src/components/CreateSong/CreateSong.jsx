@@ -8,7 +8,6 @@ import { UserContext } from "../../contexts/UserContext"
 export default function CreateSong() {
 
     const {user} = useContext(UserContext)
-    console.log(user)
 
     const [formData, setFormData] = useState({
         title: '',
