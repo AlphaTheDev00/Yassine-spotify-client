@@ -15,9 +15,11 @@
   transition: transform 0.2s ease-in-out;
   text-decoration: none;
 }
+
 .homebutton:hover {
   transform: scale(1.1);
 }
+
 .authButton {
   color: var(--chakra-colors-bg-inverted);
   cursor: pointer;
@@ -37,9 +39,11 @@
   font-weight: 500;
   transition: color 0.2s ease-in-out;
 }
+
 .authnav a:hover {
   color: var(--chakra-colors-bg);
 }
+
 .authnav button {
   background-color: var(--chakra-colors-color-palette-muted);
   color: var(--chakra-colors-color-palette-fg);
@@ -49,6 +53,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 }
+
 .authnav button:hover {
   background-color: var(--chakra-colors-gray-subtle);
 }
