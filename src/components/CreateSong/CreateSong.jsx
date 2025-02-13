@@ -1,18 +1,14 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import AudioUpload from "../AudioUpload/AudioUpload"
 import { songCreate } from "../../services/songService.js"
 import styles from './CreateSong.module.css'
 import { useNavigate } from "react-router"
+import { UserContext } from "../../contexts/UserContext"
 
 export default function CreateSong() {
 
-    const user =
-    {
-        username: "aaron1",
-        email: "aaron1@email.com",
-        // profileImage: "https://bit.ly/sage-adebayo",
-        isArtist: true
-    }
+    const {user} = useContext(UserContext)
+    console.log(user)
 
     const [formData, setFormData] = useState({
         title: '',
@@ -27,10 +23,8 @@ export default function CreateSong() {
     useEffect(() => {
         if (!user) {
             navigate('/login')
-        } else if (!user.isArtist) {
-            navigate('/')
         }
-    })
+    }, [user, navigate])
 
     function handleChange(event) {
         setFormData({ ...formData, [event.target.name]: event.target.value })
