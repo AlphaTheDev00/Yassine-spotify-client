@@ -17,20 +17,23 @@ export async function songCreate(formData) {
   }
 }
 
+export async function relatedSongs(userId) {
+  try {
+    const relatedSongsResponse = await axios.get(`${BASE_URL}/user/${userId}`);
+    const relatedSongs = relatedSongsResponse.data;
+    return relatedSongs
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
 export async function songShow(id) {
   try {
     const res = await axios.get(`${BASE_URL}/${id}`);
     const data = res.data;
 
-    let relatedSongs = [];
-    if (data.user_id?._id) {
-      const relatedSongsResponse = await axios.get(
-        `${BASE_URL}/user/${data.user_id._id}`
-      );
-      relatedSongs = relatedSongsResponse.data;
-    }
-
-    return { song: data, relatedSongs };
+    return data;
   } catch (error) {
     console.log("❌ Error fetching song:", error);
     throw error;

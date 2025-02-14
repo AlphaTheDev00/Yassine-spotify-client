@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import { getToken } from "../../utils/auth";
 import { useAuth } from "../../contexts/UserContext";
 import styles from "./SingleSong.module.css";
-import { songDelete, songShow } from "../../services/songService";
+import { relatedSongs, songDelete, songShow } from "../../services/songService";
 
 const SingleSong = () => {
   const { id } = useParams();
@@ -19,9 +19,11 @@ const SingleSong = () => {
     const fetchSong = async () => {
       setLoading(true);
       try {
-        const { song, relatedSongs } = await songShow(id);
-        setSong(song);
-        setUserSongs(relatedSongs);
+        const data = await songShow(id);
+        setSong(data);
+
+        const relatedSongsList = await relatedSongs(data.user_id._id)
+        setUserSongs(relatedSongsList);
       } catch (err) {
         setError(err.message);
       } finally {

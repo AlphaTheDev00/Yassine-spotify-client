@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router";
 import styles from "./AllSongs.module.css";
@@ -11,7 +11,7 @@ const AllSongs = () => {
   useEffect(() => {
     const fetchSongs = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/songs");
+        const response = await axios.get(import.meta.env.VITE_API_URL + "/songs");
         console.log("Fetched Songs:", response.data);
         setSongs(response.data.allSongs);
       } catch (err) {
