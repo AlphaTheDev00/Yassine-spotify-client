@@ -17,16 +17,6 @@ export async function songCreate(formData) {
   }
 }
 
-// export async function songShow(id) {
-//   try {
-//     const res = await axios.get(BASE_URL + `/${id}`);
-//     return res.data;
-//   } catch (error) {
-//     console.log(error);
-//     throw error;
-//   }
-// }
-
 export async function songShow(id) {
   try {
     const res = await axios.get(`${BASE_URL}/${id}`);
