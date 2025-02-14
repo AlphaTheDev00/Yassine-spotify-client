@@ -21,15 +21,26 @@ export default function Login() {
     e.preventDefault();
     try {
       const data = await signin(formData);
-      // 1. setToken to storage when we receive it in the response
+      console.log("Login response:", data); // Check if token exists in response
+
+      if (!data.token) {
+        console.error("No token received from API!");
+        return;
+      }
+
       setToken(data.token);
-      // 2. Set the global user context to the user inside the token
+      console.log(
+        "Token saved in localStorage:",
+        localStorage.getItem("spotify_clone_token")
+      ); // Check if it's stored
+
       setUser(getUserFromToken());
-      // 3. Navigate to the home page
+      console.log("User after login:", getUserFromToken()); // Verify the user context
+
       navigate("/");
     } catch (error) {
-      setErrors(error.response.data.message);
-      console.log(error);
+      setErrors(error.response?.data?.message || "An error occurred");
+      console.error("Login error:", error);
     }
   };
 
