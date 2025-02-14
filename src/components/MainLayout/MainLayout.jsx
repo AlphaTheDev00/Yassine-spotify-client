@@ -5,10 +5,10 @@ import { Outlet } from "react-router";
 export default function MainLayout() {
   return (
     <Grid templateColumns="3fr 7fr" gap="8px" padding="5px" flexGrow="1">
-      <GridItem borderRadius="16px" padding="16px">
+      <GridItem borderRadius="16px" padding="16px" bg="var(--chakra-colors-bg-muted)">
         <SideBar />
       </GridItem>
-      <GridItem borderRadius="16px" padding="16px">
+      <GridItem borderRadius="16px" padding="16px" bg="var(--chakra-colors-bg-muted)">
         <Outlet />
       </GridItem>
     </Grid>
