@@ -7,7 +7,6 @@ import { useNavigate } from "react-router";
 
 export default function Login() {
   const { user, setUser } = useContext(UserContext);
-  console.log(user);
 
   const [formData, setFormData] = useState({
     identifier: "",
@@ -21,7 +20,6 @@ export default function Login() {
     e.preventDefault();
     try {
       const data = await signin(formData);
-      console.log("Login response:", data); // Check if token exists in response
 
       if (!data.token) {
         console.error("No token received from API!");
@@ -29,13 +27,8 @@ export default function Login() {
       }
 
       setToken(data.token);
-      console.log(
-        "Token saved in localStorage:",
-        localStorage.getItem("spotify_clone_token")
-      ); // Check if it's stored
 
       setUser(getUserFromToken());
-      console.log("User after login:", getUserFromToken()); // Verify the user context
 
       navigate("/");
     } catch (error) {
