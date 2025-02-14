@@ -1,7 +1,6 @@
 .songsContainer {
   padding: 40px 20px;
   text-align: center;
-  background-color: #121212;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,7 +9,7 @@
 .heading {
   font-size: 28px;
   font-weight: bold;
-  color: #fff;
+  color: var(--chakra-colors-bg-inverted);
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 20px;
@@ -23,11 +22,10 @@
   gap: 20px;
   justify-content: center;
   width: 90%;
-  max-width: 1200px;
 }
 
 .songCard {
-  background-color: #181818;
+  background-color: var(--chakra-colors-bg-emphasized);
   padding: 15px;
   border-radius: 15px;
   text-align: center;
@@ -48,7 +46,6 @@
 
 .songCover {
   width: 180px;
-  height: 180px;
   border-radius: 50%;
   object-fit: cover;
   transition: transform 0.3s ease, opacity 0.3s ease;
@@ -64,7 +61,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--chakra-colors-bg-inverted);
   margin-top: 10px;
 }
 
