@@ -1,12 +1,12 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import styles from "./Register.module.css";
 import { signup } from "../../services/userService.js";
 import { setToken, getUserFromToken } from "../../utils/auth";
-import { UserContext } from "../../contexts/UserContext";
-import { useNavigate } from "react-router";
+import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser } = useAuth();
   console.log(user);
 
   const [formData, setFormData] = useState({
@@ -18,21 +18,47 @@ export default function Register() {
   });
 
   const [errors, setErrors] = useState({});
+  const [generalError, setGeneralError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setGeneralError("");
+    
     try {
       const data = await signup(formData);
-      // 1. Part of the response data above is "token". This needs to be set to local storage
-      setToken(data.token);
-      // 2. Decode the token, setting the user inside to the global user state (context)
-      setUser(getUserFromToken());
-      // 3. navigate to home page on sign in
-      navigate("/");
+      
+      if (data && data.token) {
+        // 1. Set token to local storage
+        setToken(data.token);
+        
+        // 2. Decode the token, setting the user inside to the global user state (context)
+        const userFromToken = getUserFromToken();
+        setUser(userFromToken);
+        
+        // 3. navigate to home page on sign in
+        navigate("/");
+      } else {
+        setGeneralError("Registration failed. Please try again.");
+      }
     } catch (error) {
-      setErrors(error.response.data.errors);
+      console.error("Registration error:", error);
+      
+      if (error.response && error.response.data) {
+        if (error.response.data.errors) {
+          setErrors(error.response.data.errors);
+        }
+        if (error.response.data.message) {
+          setGeneralError(error.response.data.message);
+        }
+      } else {
+        setGeneralError("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -47,6 +73,12 @@ export default function Register() {
         <h1>Register</h1>
         <p>Create an account on MusicFy</p>
 
+        {generalError && (
+          <div className={styles.errorAlert}>
+            {generalError}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <div className="input-control">
             <label htmlFor="username">Username</label>
@@ -57,6 +89,7 @@ export default function Register() {
               placeholder="Enter a username"
               required
               onChange={handleChange}
+              value={formData.username}
             />
             {errors.username && (
               <p className="error-message">{errors.username}</p>
@@ -72,6 +105,7 @@ export default function Register() {
               placeholder="Enter your email address"
               required
               onChange={handleChange}
+              value={formData.email}
             />
             {errors.email && <p className="error-message">{errors.email}</p>}
           </div>
@@ -85,6 +119,7 @@ export default function Register() {
               placeholder="Enter a password"
               required
               onChange={handleChange}
+              value={formData.password}
             />
             {errors.password && (
               <p className="error-message">{errors.password}</p>
@@ -100,6 +135,7 @@ export default function Register() {
               placeholder="Re-type your password"
               required
               onChange={handleChange}
+              value={formData.confirmPassword}
             />
             {errors.confirmPassword && (
               <p className="error-message">{errors.confirmPassword}</p>
@@ -109,11 +145,12 @@ export default function Register() {
           <button
             type="submit"
             disabled={
+              isSubmitting ||
               formData.password === "" ||
               formData.password !== formData.confirmPassword
             }
           >
-            Register
+            {isSubmitting ? "Registering..." : "Register"}
           </button>
         </form>
       </section>

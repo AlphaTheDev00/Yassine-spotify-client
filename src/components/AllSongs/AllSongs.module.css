@@ -1,6 +1,5 @@
 .songsContainer {
   padding: 40px 20px;
-  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,68 +9,88 @@
   font-size: 28px;
   font-weight: bold;
   color: var(--chakra-colors-bg-inverted);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
-  font-family: "Poppins", sans-serif;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .songGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
-  justify-content: center;
-  width: 90%;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .songCard {
-  background-color: var(--chakra-colors-bg-emphasized);
-  padding: 15px;
-  border-radius: 15px;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+  position: relative;
+  background: rgba(30, 30, 30, 0.7);
+  border-radius: 8px;
   overflow: hidden;
+  transition: transform 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 .songCard:hover {
-  transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  transform: translateY(-5px);
 }
 
-.songCover {
-  width: 180px;
-  border-radius: 50%;
+.songCardContent {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 10px;
+}
+
+.songImage {
+  width: 100%;
+  aspect-ratio: 1;
   object-fit: cover;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.songCard:hover .songCover {
-  transform: rotate(5deg);
-  opacity: 0.85;
+  border-radius: 4px;
+  margin-bottom: 10px;
 }
 
 .songInfo {
+  padding: 0 5px;
+}
+
+.songTitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.likeButton {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--chakra-colors-bg-inverted);
-  margin-top: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 
-.createdBy {
-  font-size: 13px;
-  color: #888;
-  margin-top: 5px;
+.likeButton:hover {
+  transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.7);
 }
 
-.createdBy span {
-  color: #1db954;
-  font-weight: bold;
+.heartIcon {
+  font-size: 16px;
+  color: white;
+  transition: color 0.2s ease-in-out;
+}
+
+.heartIcon:hover {
+  color: #1ed760;
 }

@@ -1,0 +1,26 @@
+.mainContainer {
+  height: calc(100vh - 70px);
+  background-color: #121212;
+  color: white;
+}
+
+.sidebarWrapper {
+  background-color: #121212;
+  border-right: 1px solid #282828;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.contentWrapper {
+  background-color: #181818;
+  padding: 24px;
+  overflow-y: auto;
+  border-radius: 0;
+}
+
+@media (min-width: 768px) {
+  .contentWrapper {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+}

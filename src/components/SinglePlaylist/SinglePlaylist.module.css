@@ -1,0 +1,171 @@
+.playlistContainer {
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loadingContainer,
+.errorContainer {
+  color: var(--chakra-colors-bg-inverted);
+  font-size: 18px;
+  margin-top: 40px;
+  text-align: center;
+}
+
+.errorContainer {
+  color: #ff5252;
+}
+
+.playlistHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.playlistCover {
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  margin-right: 30px;
+}
+
+.playlistInfo {
+  flex: 1;
+}
+
+.playlistName {
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.songCount {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.emptyState {
+  text-align: center;
+  color: var(--chakra-colors-bg-inverted);
+  margin-top: 40px;
+  padding: 30px;
+  background: rgba(30, 30, 30, 0.7);
+  border-radius: 10px;
+  max-width: 500px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.emptyState p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.songsList {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.songItem {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  background: rgba(30, 30, 30, 0.7);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.songItem:hover {
+  background: rgba(40, 40, 40, 0.8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.songCover {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  object-fit: cover;
+  margin-right: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.songInfo {
+  flex: 1;
+  overflow: hidden;
+}
+
+.songTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.artistName {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.songActions {
+  display: flex;
+  gap: 10px;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 5px;
+}
+
+.removeButton:hover {
+  color: #ff5252;
+  transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+  .playlistHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .playlistCover {
+    margin-right: 0;
+    margin-bottom: 20px;
+    width: 150px;
+    height: 150px;
+  }
+
+  .songItem {
+    padding: 10px;
+  }
+
+  .songCover {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+
+  .songTitle {
+    font-size: 16px;
+  }
+
+  .artistName {
+    font-size: 13px;
+  }
+}

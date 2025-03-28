@@ -1,0 +1,128 @@
+.playlistsContainer {
+  padding: 40px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heading {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--chakra-colors-bg-inverted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+  font-family: "Poppins", sans-serif;
+}
+
+.createPlaylistForm {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 40px;
+}
+
+.createPlaylistForm form {
+  display: flex;
+  gap: 10px;
+}
+
+.playlistInput {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  border-radius: 8px !important;
+  padding: 10px 15px !important;
+  font-size: 16px !important;
+}
+
+.playlistInput:focus {
+  border-color: #1db954 !important;
+  box-shadow: 0 0 0 1px #1db954 !important;
+}
+
+.createButton {
+  background: #1db954 !important;
+  color: white !important;
+  border-radius: 8px !important;
+  padding: 0 20px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.createButton:hover {
+  background: #1ed760 !important;
+  transform: translateY(-2px);
+}
+
+.playlistGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 25px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.playlistCard {
+  background-color: rgba(30, 30, 30, 0.7);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.playlistCard:hover {
+  transform: translateY(-5px);
+  background-color: rgba(40, 40, 40, 0.8);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+}
+
+.playlistCover {
+  width: 160px;
+  height: 160px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.playlistCard:hover .playlistCover {
+  transform: scale(1.05);
+}
+
+.playlistInfo {
+  width: 100%;
+}
+
+.playlistName {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.songCount {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 768px) {
+  .playlistGrid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .playlistCover {
+    width: 130px;
+    height: 130px;
+  }
+}

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { getToken } from "../../utils/auth";
-import { useAuth } from "../../contexts/UserContext";
+import { useAuth } from "../../hooks/useAuth";
 import styles from "./SingleSong.module.css";
 import { relatedSongs, songDelete, songShow } from "../../services/songService";
+import { getSmartSongImage } from "../../services/smartPictureService";
 
 const SingleSong = () => {
   const { id } = useParams();
@@ -80,7 +81,7 @@ const SingleSong = () => {
       <div className={styles["song-card"]}>
         <h2 className={styles["song-title"]}>{song.title}</h2>
         <img
-          src={song.cover_image || "https://picsum.photos/500/500"}
+          src={getSmartSongImage(song, 500, 500)}
           alt={song.title}
           className={styles["song-cover"]}
         />
@@ -136,7 +137,7 @@ const SingleSong = () => {
                 className={styles["other-song-card"]}
               >
                 <img
-                  src={otherSong.cover_image || "https://picsum.photos/200"}
+                  src={getSmartSongImage(otherSong, 200, 200)}
                   alt={otherSong.title}
                   className={styles["other-song-cover"]}
                 />

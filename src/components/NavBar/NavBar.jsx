@@ -1,15 +1,14 @@
-import { NavLink, useLocation } from "react-router";
+import { NavLink, useLocation } from "react-router-dom";
 import styles from "./NavBar.module.css";
 import { GoHome, GoHomeFill } from "react-icons/go";
+import { FaMusic, FaSignOutAlt, FaHeart } from "react-icons/fa";
 import { Avatar } from "@chakra-ui/react";
-import { useContext } from "react";
-import { UserContext } from "../../contexts/UserContext";
 import { removeToken } from "../../utils/auth";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function NavBar() {
   const location = useLocation();
-
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser } = useAuth();
 
   function logOut() {
     removeToken();
@@ -18,32 +17,47 @@ export default function NavBar() {
 
   return (
     <nav className={styles.navbar}>
-      <div className={styles.homebutton}>
-        <NavLink to="/">
+      <div className={styles.navLeft}>
+        <div className={styles.logo}>
+          <FaMusic size={24} />
+          <span>MusicFy</span>
+        </div>
+        <NavLink to="/" className={styles.navLink}>
           {location.pathname === "/" ? (
-            <GoHomeFill size={30} />
+            <GoHomeFill size={22} />
           ) : (
-            <GoHome size={30} />
+            <GoHome size={22} />
           )}
+          <span>Home</span>
         </NavLink>
+        {user && (
+          <NavLink to="/liked-songs" className={styles.navLink}>
+            <FaHeart size={20} color={location.pathname === "/liked-songs" ? "#1ed760" : "currentColor"} />
+            <span>Liked Songs</span>
+          </NavLink>
+        )}
       </div>
+      
       {user ? (
-        <div className={styles.authnav}>
-          <button className={styles.authButton} onClick={logOut}>
-            Log out
+        <div className={styles.navRight}>
+          <div className={styles.userInfo}>
+            <span>Hello, {user.username}</span>
+          </div>
+          <button className={styles.logoutButton} onClick={logOut}>
+            <FaSignOutAlt size={16} />
+            <span>Log out</span>
           </button>
-          <Avatar.Root>
-            <Avatar.Fallback name={user.username} />
-            <Avatar.Image src={user.profileImage} />
-          </Avatar.Root>
+          <div className={styles.avatar}>
+            <Avatar name={user.username} src={user.profileImage} />
+          </div>
         </div>
       ) : (
-        <div className={styles.authnav}>
-          <NavLink className={styles.authButton} to="/register">
-            Register
+        <div className={styles.navRight}>
+          <NavLink to="/login" className={styles.navLink}>
+            Log in
           </NavLink>
-          <NavLink className={styles.authButton} to="/login">
-            Login
+          <NavLink to="/register" className={styles.navLink}>
+            Sign up
           </NavLink>
         </div>
       )}

@@ -1,22 +1,33 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Link } from "react-router";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useToast, Box, Text, Spinner, Alert, AlertIcon } from "@chakra-ui/react";
+import { useAuth } from "../../hooks/useAuth";
+import { addToLikedSongs, removeFromLikedSongs } from "../../services/likedSongsService";
+import { getAllSongs } from "../../services/songService";
+import { getSmartSongImage } from "../../services/smartPictureService";
+import api from "../../utils/api";
 import styles from "./AllSongs.module.css";
 
 const AllSongs = () => {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [likedSongs, setLikedSongs] = useState(new Set());
+  const { user } = useAuth();
+  const toast = useToast();
 
   useEffect(() => {
     const fetchSongs = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_API_URL + "/songs");
+        console.log("Fetching songs from API...");
+        setLoading(true);
+        const response = await getAllSongs();
         console.log("Fetched Songs:", response.data);
-        setSongs(response.data.allSongs);
+        setSongs(Array.isArray(response.data) ? response.data : []);
       } catch (err) {
         console.error("Error fetching songs:", err);
-        setError(err.message);
+        setError(err.message || "Failed to fetch songs");
       } finally {
         setLoading(false);
       }
@@ -25,52 +36,128 @@ const AllSongs = () => {
     fetchSongs();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  useEffect(() => {
+    const fetchLikedSongs = async () => {
+      if (!user) return;
+      try {
+        console.log("Fetching liked songs...");
+        const response = await api.get("/api/users/liked-songs");
+        console.log("Liked songs response:", response.data);
+        const likedSongsIds = new Set(response.data.songs.map(song => song._id));
+        setLikedSongs(likedSongsIds);
+      } catch (err) {
+        console.error("Error fetching liked songs:", err);
+        // Don't set an error state here as it's not critical for the page to load
+      }
+    };
+
+    fetchLikedSongs();
+  }, [user]);
+
+  const handleLikeToggle = async (e, songId) => {
+    e.preventDefault(); // Prevent navigation to song details
+    if (!user) {
+      toast({
+        title: "Please log in",
+        description: "You need to be logged in to like songs",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    try {
+      if (likedSongs.has(songId)) {
+        await removeFromLikedSongs(songId);
+        setLikedSongs(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(songId);
+          return newSet;
+        });
+        toast({
+          title: "Song removed from liked songs",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+      } else {
+        await addToLikedSongs(songId);
+        setLikedSongs(prev => new Set([...prev, songId]));
+        toast({
+          title: "Song added to liked songs",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: err.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box textAlign="center" py={10}>
+        <Spinner size="xl" />
+        <Text mt={4}>Loading songs...</Text>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert status="error" variant="solid" borderRadius="md" m={4}>
+        <AlertIcon />
+        <Text>Error: {error}</Text>
+      </Alert>
+    );
+  }
 
   return (
     <div className={styles.songsContainer}>
       <h2 className={styles.heading}>All Songs</h2>
       {songs.length === 0 ? (
-        <p>No songs available</p>
+        <Box textAlign="center" py={10}>
+          <Text>No songs available</Text>
+          <Text mt={2} fontSize="sm" color="gray.500">
+            {user ? "Try creating a new song!" : "Log in to create songs!"}
+          </Text>
+        </Box>
       ) : (
         <div className={styles.songGrid}>
-          {songs.map((song) => {
-            return (
-              <Link
-                to={`/songs/${song._id}`}
-                key={song._id}
-                className={styles.songCardLink}
-              >
-                <div className={styles.songCard}>
-                  <img
-                    src={
-                      song.cover_image && song.cover_image.trim() !== ""
-                        ? song.cover_image
-                        : "https://picsum.photos/200"
-                    }
-                    alt={song.title || "Song Cover"}
-                    className={styles.songCover}
-                  />
-                  <div className={styles.songInfo}>
-                    {/* Top title */}
-                    <h3 className={styles.songTopTitle}>{song.title}</h3>
-                    {/* Animated title */}
-                    {/* <h3 className={styles.songTitle}>{song.title}</h3> */}
-                    {/* <p className={styles.artistName}>
-                      {song.user_id?.username
-                        ? song.user_id.username
-                        : "Unknown Artist"}
-                    </p> */}
-                    <p className={styles.createdBy}>
-                      Created by{" "}
-                      <span>{song.user_id?.username || "Unknown"}</span>
-                    </p>
-                  </div>
+          {songs.map((song) => (
+            <div key={song._id} className={styles.songCard}>
+              <Link to={`/songs/${song._id}`} className={styles.songCardContent}>
+                <img
+                  src={getSmartSongImage(song, 300, 300)}
+                  alt={song.title}
+                  className={styles.songImage}
+                />
+                <div className={styles.songInfo}>
+                  <h3 className={styles.songTitle}>{song.title}</h3>
                 </div>
               </Link>
-            );
-          })}
+              {user && (
+                <button
+                  className={styles.likeButton}
+                  onClick={(e) => handleLikeToggle(e, song._id)}
+                >
+                  {likedSongs.has(song._id) ? (
+                    <FaHeart className={styles.heartIcon} color="#1ed760" />
+                  ) : (
+                    <FaRegHeart className={styles.heartIcon} />
+                  )}
+                </button>
+              )}
+            </div>
+          ))}
         </div>
       )}
     </div>

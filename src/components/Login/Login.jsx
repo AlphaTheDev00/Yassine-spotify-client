@@ -1,45 +1,79 @@
-import { useState, useContext } from "react";
+import { useState, useEffect } from "react";
 import styles from "./Login.module.css";
 import { signin } from "../../services/userService.js";
-import { setToken, getUserFromToken } from "../../utils/auth";
-import { UserContext } from "../../contexts/UserContext";
-import { useNavigate } from "react-router";
+import { setToken } from "../../utils/auth";
+import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const { user, setUser } = useContext(UserContext);
+  const { refreshUser } = useAuth();
 
   const [formData, setFormData] = useState({
     identifier: "",
     password: "",
   });
-  const [errors, setErrors] = useState("");
+  const [errors, setErrors] = useState({});
+  const [generalError, setGeneralError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [redirectPath, setRedirectPath] = useState("/");
 
   const navigate = useNavigate();
 
+  // Check for redirect path on component mount
+  useEffect(() => {
+    const savedPath = sessionStorage.getItem("redirectAfterLogin");
+    if (savedPath) {
+      setRedirectPath(savedPath);
+      // Clear it after reading
+      sessionStorage.removeItem("redirectAfterLogin");
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setGeneralError("");
+    setErrors({});
+    
     try {
       const data = await signin(formData);
 
-      if (!data.token) {
-        console.error("No token received from API!");
+      if (!data || !data.token) {
+        setGeneralError("Login failed. Please try again.");
         return;
       }
 
       setToken(data.token);
+      
+      // Use the refreshUser function from context to update user state
+      refreshUser();
 
-      setUser(getUserFromToken());
-
-      navigate("/");
+      // Add a small delay before redirecting to ensure the token is properly set
+      setTimeout(() => {
+        navigate(redirectPath);
+      }, 100);
     } catch (error) {
-      setErrors(error.response?.data?.message || "An error occurred");
       console.error("Login error:", error);
+      
+      if (error.response && error.response.data) {
+        if (error.response.data.errors) {
+          setErrors(error.response.data.errors);
+        }
+        if (error.response.data.message) {
+          setGeneralError(error.response.data.message);
+        }
+      } else {
+        setGeneralError("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   // Handle input change
   const handleChange = (e) => {
-    setErrors("");
+    setErrors({ ...errors, [e.target.name]: "" });
+    setGeneralError("");
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -48,6 +82,12 @@ export default function Login() {
       <section className={styles.container}>
         <h1>Login</h1>
         <p>Welcome back to MusicFy</p>
+
+        {generalError && (
+          <div className={styles.errorAlert}>
+            {generalError}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           {/* Email */}
@@ -60,7 +100,11 @@ export default function Login() {
               placeholder="Enter your email or username"
               required
               onChange={handleChange}
+              value={formData.identifier}
             />
+            {errors.identifier && (
+              <p className="error-message">{errors.identifier}</p>
+            )}
           </div>
 
           {/* Password */}
@@ -73,19 +117,23 @@ export default function Login() {
               placeholder="Enter your password"
               required
               onChange={handleChange}
+              value={formData.password}
             />
+            {errors.password && (
+              <p className="error-message">{errors.password}</p>
+            )}
           </div>
-          {errors && <p className="error-message">{errors}</p>}
+          
           <button
             type="submit"
-            disabled={formData.identifier === "" || formData.password === ""}
+            disabled={isSubmitting || formData.identifier === "" || formData.password === ""}
           >
-            Login
+            {isSubmitting ? "Logging in..." : "Login"}
           </button>
 
           {/* "Don't have an account?" Link */}
           <p className={styles.signupLink}>
-            Don't have an account? <a href="/register">Sign up</a>
+            Don&apos;t have an account? <a href="/register">Sign up</a>
           </p>
         </form>
       </section>

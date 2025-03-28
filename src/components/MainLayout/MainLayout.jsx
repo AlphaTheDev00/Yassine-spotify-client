@@ -1,16 +1,19 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import SideBar from "../SideBar/SideBar";
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
+import styles from "./MainLayout.module.css";
 
 export default function MainLayout() {
   return (
-    <Grid templateColumns="3fr 7fr" gap="8px" padding="5px" flexGrow="1">
-      <GridItem borderRadius="16px" padding="16px" bg="var(--chakra-colors-bg-muted)">
-        <SideBar />
-      </GridItem>
-      <GridItem borderRadius="16px" padding="16px" bg="var(--chakra-colors-bg-muted)">
-        <Outlet />
-      </GridItem>
-    </Grid>
+    <div className={styles.mainContainer}>
+      <Grid templateColumns="260px 1fr" gap="0" height="100%">
+        <GridItem className={styles.sidebarWrapper}>
+          <SideBar />
+        </GridItem>
+        <GridItem className={styles.contentWrapper}>
+          <Outlet />
+        </GridItem>
+      </Grid>
+    </div>
   );
 }

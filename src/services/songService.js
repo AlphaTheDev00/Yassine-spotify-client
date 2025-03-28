@@ -1,15 +1,10 @@
-import { getToken } from "../utils/auth.js";
-import axios from "axios";
+import api from "../utils/api.js";
 
-const BASE_URL = import.meta.env.VITE_API_URL + "/songs";
+const SONGS_ENDPOINT = "/api/songs";
 
 export async function songCreate(formData) {
   try {
-    const res = await axios.post(BASE_URL, formData, {
-      headers: {
-        Authorization: `Bearer ${getToken()}`,
-      },
-    });
+    const res = await api.post(SONGS_ENDPOINT, formData);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -19,7 +14,7 @@ export async function songCreate(formData) {
 
 export async function relatedSongs(userId) {
   try {
-    const relatedSongsResponse = await axios.get(`${BASE_URL}/user/${userId}`);
+    const relatedSongsResponse = await api.get(`${SONGS_ENDPOINT}/user/${userId}`);
     const relatedSongs = relatedSongsResponse.data;
     return relatedSongs
   } catch (error) {
@@ -30,7 +25,7 @@ export async function relatedSongs(userId) {
 
 export async function songShow(id) {
   try {
-    const res = await axios.get(`${BASE_URL}/${id}`);
+    const res = await api.get(`${SONGS_ENDPOINT}/${id}`);
     const data = res.data;
 
     return data;
@@ -42,11 +37,7 @@ export async function songShow(id) {
 
 export async function songUpdate(id, formData) {
   try {
-    const res = await axios.put(BASE_URL + `/${id}`, formData, {
-      headers: {
-        Authorization: `Bearer ${getToken()}`,
-      },
-    });
+    const res = await api.put(`${SONGS_ENDPOINT}/${id}`, formData);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -56,11 +47,7 @@ export async function songUpdate(id, formData) {
 
 export async function songDelete(id) {
   try {
-    const res = await axios.delete(`${BASE_URL}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${getToken()}`,
-      },
-    });
+    const res = await api.delete(`${SONGS_ENDPOINT}/${id}`);
     return res.data;
   } catch (error) {
     console.error(
@@ -70,4 +57,5 @@ export async function songDelete(id) {
     throw error;
   }
 }
-export const getAllSongs = () => axios.get(BASE_URL);
+
+export const getAllSongs = () => api.get(SONGS_ENDPOINT);

@@ -1,13 +1,13 @@
-import { useContext, useEffect, useState } from "react"
-import AudioUpload from "../AudioUpload/AudioUpload"
-import { songCreate } from "../../services/songService.js"
-import styles from './CreateSong.module.css'
-import { useNavigate } from "react-router"
-import { UserContext } from "../../contexts/UserContext"
+import { useState, useEffect } from "react";
+import AudioUpload from "../AudioUpload/AudioUpload";
+import { songCreate } from "../../services/songService.js";
+import styles from "./CreateSong.module.css";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function CreateSong() {
 
-    const {user} = useContext(UserContext)
+    const { user } = useAuth();
 
     const [formData, setFormData] = useState({
         title: '',
