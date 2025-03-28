@@ -1,6 +1,6 @@
 import api from "../utils/api.js";
 
-const SONGS_ENDPOINT = "/api/songs";
+const SONGS_ENDPOINT = "/songs";
 
 export async function songCreate(formData) {
   try {
@@ -14,12 +14,14 @@ export async function songCreate(formData) {
 
 export async function relatedSongs(userId) {
   try {
-    const relatedSongsResponse = await api.get(`${SONGS_ENDPOINT}/user/${userId}`);
+    const relatedSongsResponse = await api.get(
+      `${SONGS_ENDPOINT}/user/${userId}`
+    );
     const relatedSongs = relatedSongsResponse.data;
-    return relatedSongs
+    return relatedSongs;
   } catch (error) {
-    console.log(error)
-    throw error
+    console.log(error);
+    throw error;
   }
 }
 

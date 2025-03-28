@@ -12,7 +12,7 @@ console.log(`API client initialized with baseURL: ${API_URL}`);
 
 // Test the API connection on initialization
 api
-  .get("/api/test")
+  .get("/test")
   .then((response) => {
     console.log("API connection test successful:", response.data);
   })
@@ -54,22 +54,22 @@ api.interceptors.response.use(
         `Authentication error for ${error.config.url}:`,
         error.response.data
       );
-      
+
       // Don't redirect if already on login or register page
       const currentPath = window.location.pathname;
       if (currentPath !== "/login" && currentPath !== "/register") {
         console.log("Redirecting to login page due to auth error");
-        
+
         // Clear the invalid token
         removeToken();
-        
+
         // Store the current URL to redirect back after login
         sessionStorage.setItem("redirectAfterLogin", currentPath);
-        
+
         // Use window.location.replace instead of href to prevent adding to browser history
         // This helps prevent redirect loops
         window.location.replace("/login");
-        
+
         // Return a new promise that never resolves to stop further error handling
         return new Promise(() => {});
       }
