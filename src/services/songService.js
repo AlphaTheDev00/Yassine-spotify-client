@@ -92,15 +92,41 @@ export async function songShow(id) {
     const res = await api.get(`${SONGS_ENDPOINT}/${id}`);
     console.log("Song details response:", res);
 
-    validateResponse(res);
-    return res.data.data;
+    // Handle different response formats
+    if (res.data && res.data.data) {
+      return res.data.data; // API returned { data: {...} }
+    } else if (res.data && typeof res.data === 'object') {
+      return res.data; // API returned the song object directly
+    } else {
+      console.warn("Unexpected API response format for song details:", res.data);
+      // Return a fallback song object
+      return {
+        _id: id,
+        title: "Song Not Available",
+        artist: "Unknown",
+        album: "Unknown",
+        coverImage: "https://via.placeholder.com/300?text=Not+Available",
+        audioUrl: "",
+        user_id: { username: "unknown" }
+      };
+    }
   } catch (error) {
     console.error("Error fetching song:", {
       status: error.response?.status,
       data: error.response?.data,
       message: error.message,
     });
-    throw error;
+    
+    // Return a fallback song object instead of throwing
+    return {
+      _id: id,
+      title: "Error Loading Song",
+      artist: "Unknown",
+      album: "Error",
+      coverImage: "https://via.placeholder.com/300?text=Error",
+      audioUrl: "",
+      user_id: { username: "unknown" }
+    };
   }
 }
 
