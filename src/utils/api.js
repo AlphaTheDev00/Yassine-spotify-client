@@ -5,11 +5,11 @@ const getBaseUrl = () => {
   const isProd = import.meta.env.PROD;
   
   if (isProd) {
-    // In production, use the deployed API URL without the path
+    // In production, use the deployed API URL
     return "https://musicfy-clone.netlify.app";
   } else {
-    // In development, use relative URL (will be handled by Vite proxy)
-    return "";
+    // In development, use localhost
+    return "http://localhost:8888";
   }
 };
 
