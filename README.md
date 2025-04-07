@@ -54,7 +54,7 @@ npm run dev
 
 ## ⏱️ Timeframe & Working Team
 
-**Timeframe:** 2 weeks (April 2025)
+**Timeframe:** 2 weeks
 
 **Project Type:** Solo project
 
