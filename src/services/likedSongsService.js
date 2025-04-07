@@ -1,6 +1,6 @@
 import api from "../utils/api.js";
 
-const LIKED_SONGS_ENDPOINT = "/api/liked-songs";
+const LIKED_SONGS_ENDPOINT = "/.netlify/functions/api/users/liked-songs";
 
 // Helper function to validate response format
 const validateResponse = (response) => {

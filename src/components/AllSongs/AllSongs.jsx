@@ -62,7 +62,7 @@ const AllSongs = () => {
       if (!user) return;
       try {
         console.log("Fetching liked songs...");
-        const response = await api.get("/api/users/liked-songs");
+        const response = await api.get("/.netlify/functions/api/users/liked-songs");
         console.log("Liked songs response:", response);
 
         if (response?.data?.songs) {
