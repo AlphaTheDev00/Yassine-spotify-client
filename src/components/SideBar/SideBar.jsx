@@ -64,8 +64,22 @@ const SideBar = () => {
         </div>
       ) : (
         <div className="auth-card">
-          <h3>ENJOY MUSIC</h3>
-          <p>Sign in to create playlists and like songs</p>
+          <h3>Premium Experience</h3>
+          <p>Unlock the full potential of MusicFy with your personal account</p>
+          <div className="auth-features">
+            <div className="auth-feature">
+              <FaHeart className="feature-icon" />
+              <span>Save favorites</span>
+            </div>
+            <div className="auth-feature">
+              <FaBookmark className="feature-icon" />
+              <span>Create playlists</span>
+            </div>
+            <div className="auth-feature">
+              <FaMusic className="feature-icon" />
+              <span>Upload music</span>
+            </div>
+          </div>
           <div className="auth-buttons">
             <Link to="/login" className="auth-button login-button">
               <FaUser className="auth-icon" />
