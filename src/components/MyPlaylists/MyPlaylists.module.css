@@ -1,0 +1,55 @@
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.link {
+  color: #1db954;
+  text-decoration: underline;
+}
+
+.input {
+  flex: 1;
+}
+
+.createButton {
+  min-width: 150px;
+}
+
+.emptyState {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.playlistCard {
+  transition: transform 0.2s ease-in-out;
+  height: 100%;
+}
+
+.playlistCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.playlistImage {
+  aspect-ratio: 1;
+  object-fit: cover;
+  width: 100%;
+}
+
+.viewButton {
+  flex: 1;
+  margin-right: 0.5rem;
+}
+
+.deleteButton {
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+}

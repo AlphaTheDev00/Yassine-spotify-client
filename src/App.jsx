@@ -11,6 +11,8 @@ import Login from "./components/Login/Login";
 import Playlists from "./components/Playlists/Playlists";
 import SinglePlaylist from "./components/SinglePlaylist/SinglePlaylist";
 import LikedSongs from "./components/LikedSongs/LikedSongs";
+import MyPlaylists from "./components/MyPlaylists/MyPlaylists";
+import PlaylistDetail from "./components/PlaylistDetail/PlaylistDetail";
 import MusicPictureShowcase from "./components/MusicPicture/MusicPictureShowcase";
 import { AuthProvider } from "./contexts/AuthProvider";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
@@ -45,7 +47,7 @@ function App() {
             path="/playlists"
             element={
               <ProtectedRoute>
-                <Playlists />
+                <MyPlaylists />
               </ProtectedRoute>
             }
           />
@@ -53,7 +55,7 @@ function App() {
             path="/playlists/:id"
             element={
               <ProtectedRoute>
-                <SinglePlaylist />
+                <PlaylistDetail />
               </ProtectedRoute>
             }
           />
