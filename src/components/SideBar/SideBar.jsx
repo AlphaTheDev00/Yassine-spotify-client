@@ -20,15 +20,6 @@ const SideBar = () => {
           <FaHome />
           <span>Home</span>
         </Link>
-        <Link
-          to="/search"
-          className={`nav-link ${
-            location.pathname === "/search" ? "active" : ""
-          }`}
-        >
-          <FaSearch />
-          <span>Search</span>
-        </Link>
         {user && (
           <>
             <Link
