@@ -9,6 +9,7 @@ export const signup = async (userData) => {
     console.log("Sending registration data:", cleanUserData);
     const response = await api.post("/auth/register", cleanUserData);
     console.log("Registration response:", response.data);
+    // Return the full response data structure
     return response.data;
   } catch (error) {
     console.error(

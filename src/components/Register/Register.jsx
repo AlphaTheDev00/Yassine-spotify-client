@@ -64,11 +64,13 @@ export default function Register() {
     }
 
     try {
-      const data = await signup(formData);
+      const response = await signup(formData);
+      console.log("Full registration response:", response);
 
-      if (data && data.token) {
+      // Check if we have a valid response with token directly in the response
+      if (response && response.token) {
         // 1. Set token to local storage
-        setToken(data.token);
+        setToken(response.token);
 
         // 2. Decode the token, setting the user inside to the global user state (context)
         const userFromToken = getUserFromToken();
@@ -77,6 +79,7 @@ export default function Register() {
         // 3. navigate to home page on sign in
         navigate("/");
       } else {
+        console.error("Token not found in response:", response);
         setGeneralError("Registration failed. Please try again.");
       }
     } catch (error) {
