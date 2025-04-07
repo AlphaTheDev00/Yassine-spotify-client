@@ -1,46 +1,57 @@
 import { createContext, useState, useEffect } from "react";
-import { getToken, parseToken } from "../utils/auth";
-import api from "../utils/api";
-
-export const AuthContext = createContext();
+import { getToken, getUserFromToken, removeToken } from "../utils/auth";
+import { UserContext } from "../contexts/UserContext";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const initAuth = async () => {
-      try {
-        const token = getToken();
-        if (token) {
-          const userData = parseToken(token);
-          console.log("User data from token:", userData);
+  // Function to refresh user data from token
+  const refreshUser = () => {
+    try {
+      const userFromToken = getUserFromToken();
+      console.log("Refreshed user data from token:", userFromToken);
+      setUser(userFromToken);
+    } catch (error) {
+      console.error("Error refreshing user data:", error);
+      removeToken(); // Remove invalid token
+      setUser(null);
+    }
+  };
 
-          if (userData && userData.id) {
-            // Fetch full user data from API
-            try {
-              const response = await api.get(`/auth/user/${userData.id}`);
-              setUser(response.data);
-            } catch (error) {
-              console.error("Error fetching user data:", error);
-              // Keep the basic user data from token if API request fails
-              setUser(userData);
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Auth initialization error:", error);
-      } finally {
-        setLoading(false);
+  // Initialize auth state from token on mount
+  useEffect(() => {
+    console.log("AuthProvider: Initializing auth state");
+    refreshUser();
+    setLoading(false);
+
+    // Listen for storage events to sync auth state across tabs
+    const handleStorageChange = (e) => {
+      if (e.key === "spotify_clone_token") {
+        console.log("Token changed in another tab, refreshing user");
+        refreshUser();
       }
     };
 
-    initAuth();
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
+  const contextValue = {
+    user,
+    setUser,
+    loading,
+    refreshUser,
+    isAuthenticated: !!user,
+    logout: () => {
+      removeToken();
+      setUser(null);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, loading }}>
+    <UserContext.Provider value={contextValue}>
       {children}
-    </AuthContext.Provider>
+    </UserContext.Provider>
   );
 };

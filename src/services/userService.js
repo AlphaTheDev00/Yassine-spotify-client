@@ -30,10 +30,11 @@ export const signin = async (credentials) => {
 
     console.log("Login response:", response.data);
 
-    // Check if we have a valid response with user and token
-    if (response.data && response.data.user && response.data.token) {
+    // Check if we have a valid response with token
+    if (response.data && response.data.token) {
       return response.data;
     } else {
+      console.error("Invalid response structure:", response.data);
       throw new Error("Invalid response from server");
     }
   } catch (error) {

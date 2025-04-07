@@ -21,20 +21,37 @@ export const getUserFromToken = () => {
   if (!token) return null;
 
   try {
-    // Split the token and decode the payload (the middle part of JWT)
-    const payload = JSON.parse(atob(token.split(".")[1]));
+    // For development token, return a mock user
+    if (token === "test_token_for_development") {
+      console.log("Using development token, returning mock user");
+      return {
+        id: "user123",
+        username: "testuser",
+        email: "test@example.com"
+      };
+    }
 
-    // Check if the token has expired by comparing the expiration timestamp with the current time
-    if (payload.exp < Date.now() / 1000) {
-      // If expired, remove the token and return null
+    // For real JWT tokens
+    try {
+      // Split the token and decode the payload (the middle part of JWT)
+      const payload = JSON.parse(atob(token.split(".")[1]));
+
+      // Check if the token has expired by comparing the expiration timestamp with the current time
+      if (payload.exp && payload.exp < Date.now() / 1000) {
+        // If expired, remove the token and return null
+        removeToken();
+        return null;
+      }
+
+      // Return the user data stored in the token payload
+      return payload.user || payload;
+    } catch (error) {
+      console.error("Error decoding JWT token:", error);
       removeToken();
       return null;
     }
-
-    // Return the user data stored in the token payload
-    return payload.user;
   } catch (error) {
-    console.error("Error decoding token:", error);
+    console.error("Error processing token:", error);
     removeToken();
     return null;
   }

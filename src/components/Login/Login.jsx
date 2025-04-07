@@ -36,14 +36,17 @@ export default function Login() {
     setErrors({});
 
     try {
-      const data = await signin(formData);
+      const response = await signin(formData);
+      console.log("Full login response:", response);
 
-      if (!data || !data.token) {
+      if (!response || !response.token) {
+        console.error("Token not found in response:", response);
         setGeneralError("Login failed. Please try again.");
         return;
       }
 
-      setToken(data.token);
+      // Set the token in localStorage
+      setToken(response.token);
 
       // Use the refreshUser function from context to update user state
       refreshUser();
