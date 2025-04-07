@@ -6,7 +6,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const { refreshUser } = useAuth();
+  const { refreshUser, setUser } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -48,8 +48,16 @@ export default function Login() {
       // Set the token in localStorage
       setToken(response.token);
 
-      // Use the refreshUser function from context to update user state
-      refreshUser();
+      // Store user data in localStorage for the development token
+      const userData = {
+        id: "user123",
+        username: formData.email.split("@")[0], // Use the part before @ as username
+        email: formData.email
+      };
+      localStorage.setItem("userData", JSON.stringify(userData));
+
+      // Set the user directly in the context
+      setUser(userData);
 
       // Add a small delay before redirecting to ensure the token is properly set
       setTimeout(() => {

@@ -72,9 +72,16 @@ export default function Register() {
         // 1. Set token to local storage
         setToken(response.token);
 
-        // 2. Decode the token, setting the user inside to the global user state (context)
-        const userFromToken = getUserFromToken();
-        setUser(userFromToken);
+        // 2. Store user data in localStorage for the development token
+        const userData = {
+          id: "user123",
+          username: formData.username,
+          email: formData.email
+        };
+        localStorage.setItem("userData", JSON.stringify(userData));
+
+        // 3. Set the user in the global context
+        setUser(userData);
 
         // 3. navigate to home page on sign in
         navigate("/");

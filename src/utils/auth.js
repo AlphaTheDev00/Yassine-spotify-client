@@ -21,9 +21,22 @@ export const getUserFromToken = () => {
   if (!token) return null;
 
   try {
-    // For development token, return a mock user
+    // For development token, try to get user data from localStorage
     if (token === "test_token_for_development") {
-      console.log("Using development token, returning mock user");
+      console.log("Using development token, checking for user data");
+      // Try to get user data from localStorage
+      const userData = localStorage.getItem("userData");
+      if (userData) {
+        try {
+          const parsedUserData = JSON.parse(userData);
+          console.log("Found user data in localStorage:", parsedUserData);
+          return parsedUserData;
+        } catch (e) {
+          console.error("Error parsing user data from localStorage:", e);
+        }
+      }
+      
+      // Fallback to default user if no data found
       return {
         id: "user123",
         username: "testuser",
