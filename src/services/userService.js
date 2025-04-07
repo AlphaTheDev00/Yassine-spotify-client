@@ -8,13 +8,10 @@ export const signup = async (userData) => {
 
     console.log("Sending registration data:", cleanUserData);
     
-    // For development environment, use the mock API endpoint
-    const isProd = import.meta.env.PROD;
-    const endpoint = isProd 
-      ? "/.netlify/functions/api/auth/register"
-      : "/auth/register";
+    // Use the Netlify function path for authentication
+    const endpoint = "/.netlify/functions/api/auth/register";
       
-    console.log(`Using ${isProd ? 'production' : 'development'} endpoint: ${endpoint}`);
+    console.log(`Using authentication endpoint: ${endpoint}`);
     
     const response = await api.post(endpoint, cleanUserData);
     console.log("Registration response:", response.data);
@@ -32,13 +29,10 @@ export const signup = async (userData) => {
 // Signin API Service
 export const signin = async (credentials) => {
   try {
-    // For development environment, use the mock API endpoint
-    const isProd = import.meta.env.PROD;
-    const endpoint = isProd 
-      ? "/.netlify/functions/api/auth/login"
-      : "/auth/login";
+    // Use the Netlify function path for authentication
+    const endpoint = "/.netlify/functions/api/auth/login";
       
-    console.log(`Using ${isProd ? 'production' : 'development'} endpoint: ${endpoint}`);
+    console.log(`Using authentication endpoint: ${endpoint}`);
     console.log("With credentials:", credentials);
 
     const response = await api.post(endpoint, credentials);

@@ -6,7 +6,7 @@ const getBaseUrl = () => {
   
   if (isProd) {
     // In production, use the deployed API URL
-    return "https://musicfy-clone.netlify.app";
+    return "https://spotify-clone-api-v2.netlify.app";
   } else {
     // In development, use localhost
     return "http://localhost:8888";
