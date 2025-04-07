@@ -74,15 +74,26 @@ export async function relatedSongs(userId) {
     const res = await api.get(`${SONGS_ENDPOINT}/user/${userId}`);
     console.log("Related songs response:", res);
 
-    validateResponse(res);
-    return res.data.data || [];
+    // Handle different response formats
+    if (res.data && Array.isArray(res.data)) {
+      return res.data; // API returned array directly
+    } else if (res.data && Array.isArray(res.data.data)) {
+      return res.data.data; // API returned { data: [...] }
+    } else if (res.data && res.data.data === null) {
+      console.warn("API returned null data for related songs, returning empty array");
+      return []; // API returned { data: null }
+    } else {
+      console.warn("Unexpected API response format for related songs, returning empty array:", res.data);
+      return []; // Fallback to empty array for any other format
+    }
   } catch (error) {
     console.error("Error fetching related songs:", {
       status: error.response?.status,
       data: error.response?.data,
       message: error.message,
     });
-    throw error;
+    // Return empty array instead of throwing
+    return [];
   }
 }
 
