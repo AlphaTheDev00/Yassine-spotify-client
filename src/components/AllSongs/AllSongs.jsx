@@ -32,33 +32,23 @@ const AllSongs = () => {
       try {
         console.log("Fetching songs from API...");
         setLoading(true);
-        const response = await getAllSongs();
-        console.log("Fetched Songs Response:", response);
+        const songsData = await getAllSongs();
+        console.log("Fetched Songs:", songsData);
 
-        // Check if response has data property
-        if (response && response.data) {
-          const songsData = response.data;
-          // Handle different response formats
-          if (Array.isArray(songsData)) {
-            setSongs(songsData);
-          } else if (songsData.songs && Array.isArray(songsData.songs)) {
-            setSongs(songsData.songs);
-          } else {
-            console.error("Unexpected response format:", songsData);
-            throw new Error("Invalid response format from API");
-          }
+        // Ensure we always have an array of songs
+        if (Array.isArray(songsData)) {
+          setSongs(songsData);
         } else {
-          throw new Error("No data received from API");
+          console.warn("Unexpected data format from getAllSongs, using empty array");
+          setSongs([]);
         }
-      } catch (err) {
-        console.error("Error fetching songs:", err);
-        // Don't redirect on 401 errors for the songs page
-        if (err.response?.status === 401) {
-          setError("Please log in to view all songs");
-          setSongs([]); // Clear songs array
-        } else {
-          setError(err.message || "Failed to fetch songs");
-        }
+        
+        setError(null);
+      } catch (error) {
+        console.error("Error in fetchSongs:", error);
+        setError("Failed to load songs. Please try again later.");
+        // Set empty array to prevent UI errors
+        setSongs([]);
       } finally {
         setLoading(false);
       }

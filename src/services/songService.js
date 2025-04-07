@@ -27,19 +27,26 @@ export async function getAllSongs() {
     const res = await api.get(SONGS_ENDPOINT);
     console.log("All songs response:", res);
 
-    validateResponse(res);
-    return res.data.data || [];
+    // Handle both response formats: { data: [...] } and [...] directly
+    if (res.data && Array.isArray(res.data)) {
+      return res.data; // API returned array directly
+    } else if (res.data && Array.isArray(res.data.data)) {
+      return res.data.data; // API returned { data: [...] }
+    } else if (res.data && res.data.data === null) {
+      console.warn("API returned null data, returning empty array");
+      return []; // API returned { data: null }
+    } else {
+      console.warn("Unexpected API response format, returning empty array:", res.data);
+      return []; // Fallback to empty array for any other format
+    }
   } catch (error) {
     console.error("Error fetching all songs:", {
       status: error.response?.status,
       data: error.response?.data,
       message: error.message,
     });
-    // Don't throw the error, return an empty array for unauthenticated users
-    if (error.response?.status === 401) {
-      return [];
-    }
-    throw error;
+    // Don't throw the error, return an empty array for any error
+    return [];
   }
 }
 
