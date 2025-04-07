@@ -5,11 +5,13 @@ import { FaPlay, FaTrash } from "react-icons/fa";
 import { getLikedSongIds, removeLikedSong } from "../../utils/localLikedSongs";
 import { getAllSongs } from "../../services/songService";
 import { getSmartSongImage } from "../../services/smartPictureService";
+import { useAuth } from "../../hooks/useAuth";
 import styles from "./LikedSongs.module.css";
 
 export default function LikedSongs() {
   const [likedSongs, setLikedSongs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
   const toast = useToast();
 
   const loadLikedSongs = useCallback(async () => {
@@ -20,8 +22,10 @@ export default function LikedSongs() {
       const allSongs = await getAllSongs();
       console.log("All songs data:", allSongs);
       
-      // Get liked song IDs from localStorage
-      const likedSongIds = getLikedSongIds();
+      // Get liked song IDs from localStorage for the current user
+      const userId = user?.id || 'guest';
+      console.log("Loading liked songs for user:", userId);
+      const likedSongIds = getLikedSongIds(userId);
       console.log("Liked song IDs:", likedSongIds);
       
       // Filter all songs to get only the liked ones
@@ -49,8 +53,9 @@ export default function LikedSongs() {
 
   function handleUnlikeSong(songId) {
     try {
-      // Use local storage to remove the song
-      removeLikedSong(songId);
+      // Use local storage to remove the song for the current user
+      const userId = user?.id || 'guest';
+      removeLikedSong(songId, userId);
       setLikedSongs(likedSongs.filter((song) => song._id !== songId));
       toast({
         title: "Song removed from liked songs",

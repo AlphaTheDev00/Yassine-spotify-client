@@ -77,7 +77,9 @@ const AllSongs = () => {
     const loadLikedSongs = () => {
       try {
         console.log("Loading liked songs from localStorage...");
-        const likedSongsIds = getLikedSongIds();
+        const userId = user?.id || 'guest';
+        console.log("Loading liked songs for user:", userId);
+        const likedSongsIds = getLikedSongIds(userId);
         console.log("Loaded liked songs:", likedSongsIds);
         setLikedSongs(likedSongsIds);
       } catch (err) {
@@ -103,9 +105,10 @@ const AllSongs = () => {
     }
 
     try {
+      const userId = user?.id || 'guest';
       if (likedSongs.has(songId)) {
         // Use local storage to remove the song
-        removeLikedSong(songId);
+        removeLikedSong(songId, userId);
         setLikedSongs((prev) => {
           const newSet = new Set(prev);
           newSet.delete(songId);
@@ -119,7 +122,7 @@ const AllSongs = () => {
         });
       } else {
         // Use local storage to add the song
-        addLikedSong(songId);
+        addLikedSong(songId, userId);
         setLikedSongs((prev) => new Set([...prev, songId]));
         toast({
           title: "Song added to liked songs",
