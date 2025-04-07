@@ -269,7 +269,7 @@ const PlaylistDetail = () => {
         className={styles.header}
       >
         <Image
-          src={playlist.coverImage || "https://via.placeholder.com/300x300?text=Playlist"}
+          src={playlist.coverImage || "https://picsum.photos/seed/playlist/300/300"}
           alt={playlist.name}
           borderRadius="lg"
           className={styles.playlistImage}

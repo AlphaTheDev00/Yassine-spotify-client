@@ -181,7 +181,7 @@ const MyPlaylists = () => {
             <Card key={playlist.id} className={styles.playlistCard}>
               <CardBody>
                 <Image
-                  src={playlist.coverImage || "https://via.placeholder.com/300x300?text=Playlist"}
+                  src={playlist.coverImage || "https://picsum.photos/seed/" + playlist.id + "/300/300"}
                   alt={playlist.name}
                   borderRadius="lg"
                   className={styles.playlistImage}

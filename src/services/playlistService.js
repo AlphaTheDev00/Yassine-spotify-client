@@ -6,7 +6,7 @@ import {
   updatePlaylist,
   deletePlaylist as deleteLocalPlaylist,
   addSongToPlaylist as addSongToLocalPlaylist,
-  removeSongFromPlaylist
+  removeSongFromPlaylist as removeSongFromLocalPlaylist
 } from "../utils/localPlaylists.js";
 
 // Use the Netlify function path for playlists
@@ -100,12 +100,20 @@ export async function addSongToPlaylist(playlistId, song) {
 // Remove a song from a playlist
 export async function removeSongFromPlaylist(playlistId, songId) {
   try {
-    const res = await api.delete(
-      `${PLAYLISTS_ENDPOINT}/${playlistId}/songs/${songId}`
-    );
-    return res.data;
+    // Try to remove song from playlist via API first
+    try {
+      const res = await api.delete(
+        `${PLAYLISTS_ENDPOINT}/${playlistId}/songs/${songId}`
+      );
+      return res.data;
+    } catch (apiError) {
+      console.log('API error, falling back to local storage:', apiError);
+      // Fall back to local storage if API fails
+      const updatedPlaylist = removeSongFromLocalPlaylist(playlistId, songId);
+      return { data: updatedPlaylist, success: true };
+    }
   } catch (error) {
-    console.log(error);
+    console.log('Error removing song from playlist:', error);
     throw error;
   }
 }
