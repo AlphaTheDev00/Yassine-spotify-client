@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { getLikedSongs, removeFromLikedSongs } from "../../services/likedSongsService";
 import { useToast } from "@chakra-ui/react";
+import { getLikedSongIds, removeLikedSong } from "../../utils/localLikedSongs";
+import { getAllSongs } from "../../services/songService";
+import { getSmartSongImage } from "../../services/smartPictureService";
 import styles from "./LikedSongs.module.css";
-import smartPictureService from "../../services/smartPictureService";
 
 export default function LikedSongs() {
   const [likedSongs, setLikedSongs] = useState([]);
@@ -12,9 +13,20 @@ export default function LikedSongs() {
   const loadLikedSongs = useCallback(async () => {
     try {
       setIsLoading(true);
-      const songs = await getLikedSongs();
-      console.log("Liked songs data:", songs);
-      setLikedSongs(songs || []);
+      
+      // Get all songs first
+      const allSongs = await getAllSongs();
+      console.log("All songs data:", allSongs);
+      
+      // Get liked song IDs from localStorage
+      const likedSongIds = getLikedSongIds();
+      console.log("Liked song IDs:", likedSongIds);
+      
+      // Filter all songs to get only the liked ones
+      const likedSongsData = allSongs.filter(song => likedSongIds.has(song._id));
+      console.log("Filtered liked songs:", likedSongsData);
+      
+      setLikedSongs(likedSongsData || []);
     } catch (err) {
       console.error("Error loading liked songs:", err);
       toast({
@@ -33,9 +45,10 @@ export default function LikedSongs() {
     loadLikedSongs();
   }, [loadLikedSongs]);
 
-  async function handleUnlikeSong(songId) {
+  function handleUnlikeSong(songId) {
     try {
-      await removeFromLikedSongs(songId);
+      // Use local storage to remove the song
+      removeLikedSong(songId);
       setLikedSongs(likedSongs.filter((song) => song._id !== songId));
       toast({
         title: "Song removed from liked songs",
@@ -56,22 +69,8 @@ export default function LikedSongs() {
 
   // Get song image with fallback to smart picture service
   const getSongImage = (song) => {
-    // Check all possible image field names
-    if (song.cover_image && song.cover_image !== "") {
-      return song.cover_image;
-    }
-    if (song.cover_Image && song.cover_Image !== "") {
-      return song.cover_Image;
-    }
-    if (song.imageUrl && song.imageUrl !== "") {
-      return song.imageUrl;
-    }
-    if (song.image_url && song.image_url !== "") {
-      return song.image_url;
-    }
-    
-    // If no image found, use smart picture service
-    return smartPictureService.getSmartSongImage(song, 300, 300);
+    // Use the getSmartSongImage utility function
+    return getSmartSongImage(song, 300, 300);
   };
 
   if (isLoading) {
@@ -96,7 +95,7 @@ export default function LikedSongs() {
                 className={styles.songCover}
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = smartPictureService.getRandomMusicImage(300, 300);
+                  e.target.src = "https://via.placeholder.com/300x300?text=Music";
                 }}
               />
               <div className={styles.songInfo}>

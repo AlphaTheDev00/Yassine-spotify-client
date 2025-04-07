@@ -1,6 +1,7 @@
 import api from "../utils/api.js";
 
-const SONGS_ENDPOINT = "/songs";
+// Use the Netlify function path for songs
+const SONGS_ENDPOINT = "/.netlify/functions/api/songs";
 
 // Debug log to check the full URL being used
 api.interceptors.request.use((request) => {

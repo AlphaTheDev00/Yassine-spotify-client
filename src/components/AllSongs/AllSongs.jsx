@@ -4,19 +4,22 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import {
   useToast,
   Box,
+  Heading,
   Text,
+  SimpleGrid,
+  Card,
+  CardBody,
+  Image,
+  Stack,
   Spinner,
   Alert,
   AlertIcon,
+  IconButton,
 } from "@chakra-ui/react";
-import { useAuth } from "../../hooks/useAuth";
-import {
-  addToLikedSongs,
-  removeFromLikedSongs,
-} from "../../services/likedSongsService";
 import { getAllSongs } from "../../services/songService";
+import { getLikedSongIds, toggleLikedSong, addLikedSong, removeLikedSong } from "../../utils/localLikedSongs";
+import { useAuth } from "../../hooks/useAuth";
 import { getSmartSongImage } from "../../services/smartPictureService";
-import api from "../../utils/api";
 import styles from "./AllSongs.module.css";
 
 const AllSongs = () => {
@@ -58,32 +61,23 @@ const AllSongs = () => {
   }, []);
 
   useEffect(() => {
-    const fetchLikedSongs = async () => {
-      if (!user) return;
+    // Load liked songs from localStorage instead of API
+    const loadLikedSongs = () => {
       try {
-        console.log("Fetching liked songs...");
-        const response = await api.get("/.netlify/functions/api/users/liked-songs");
-        console.log("Liked songs response:", response);
-
-        if (response?.data?.songs) {
-          const likedSongsIds = new Set(
-            response.data.songs.map((song) => song._id)
-          );
-          setLikedSongs(likedSongsIds);
-        }
+        console.log("Loading liked songs from localStorage...");
+        const likedSongsIds = getLikedSongIds();
+        console.log("Loaded liked songs:", likedSongsIds);
+        setLikedSongs(likedSongsIds);
       } catch (err) {
-        console.error("Error fetching liked songs:", err);
-        // Don't redirect on 401 errors for liked songs
-        if (err.response?.status === 401) {
-          setLikedSongs(new Set());
-        }
+        console.error("Error loading liked songs from localStorage:", err);
+        setLikedSongs(new Set());
       }
     };
 
-    fetchLikedSongs();
+    loadLikedSongs();
   }, [user]);
 
-  const handleLikeToggle = async (e, songId) => {
+  const handleLikeToggle = (e, songId) => {
     e.preventDefault(); // Prevent navigation to song details
     if (!user) {
       toast({
@@ -98,7 +92,8 @@ const AllSongs = () => {
 
     try {
       if (likedSongs.has(songId)) {
-        await removeFromLikedSongs(songId);
+        // Use local storage to remove the song
+        removeLikedSong(songId);
         setLikedSongs((prev) => {
           const newSet = new Set(prev);
           newSet.delete(songId);
@@ -111,7 +106,8 @@ const AllSongs = () => {
           isClosable: true,
         });
       } else {
-        await addToLikedSongs(songId);
+        // Use local storage to add the song
+        addLikedSong(songId);
         setLikedSongs((prev) => new Set([...prev, songId]));
         toast({
           title: "Song added to liked songs",
