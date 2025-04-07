@@ -7,7 +7,7 @@ export const signup = async (userData) => {
     const { confirmPassword, isArtist, ...cleanUserData } = userData;
 
     console.log("Sending registration data:", cleanUserData);
-    const response = await api.post("/api/auth/register", cleanUserData);
+    const response = await api.post("/auth/register", cleanUserData);
     console.log("Registration response:", response.data);
     return response.data;
   } catch (error) {
@@ -22,10 +22,10 @@ export const signup = async (userData) => {
 // Signin API Service
 export const signin = async (credentials) => {
   try {
-    console.log("Sending login request to:", "/api/auth/login");
+    console.log("Sending login request to:", "/auth/login");
     console.log("With credentials:", credentials);
 
-    const response = await api.post("/api/auth/login", credentials);
+    const response = await api.post("/auth/login", credentials);
 
     console.log("Login response:", response.data);
 
