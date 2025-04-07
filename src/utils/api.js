@@ -2,7 +2,15 @@ import axios from "axios";
 
 // Determine the base URL based on the environment
 const getBaseUrl = () => {
-  return import.meta.env.VITE_API_URL;
+  const isProd = import.meta.env.PROD;
+  
+  if (isProd) {
+    // In production, use the deployed API URL
+    return "https://spotify-clone-api-v2.netlify.app/.netlify/functions/api";
+  } else {
+    // In development, use relative URL (will be handled by Vite proxy)
+    return "";
+  }
 };
 
 const api = axios.create({
@@ -14,6 +22,19 @@ const api = axios.create({
   },
   withCredentials: true, // Enable sending cookies with requests
 });
+
+// Helper function to validate response format
+const validateResponse = (response) => {
+  if (!response || !response.data) {
+    throw new Error("Invalid response format from API: No data received");
+  }
+  if (typeof response.data !== "object") {
+    throw new Error(
+      "Invalid response format from API: Response data is not an object"
+    );
+  }
+  return response;
+};
 
 // Add request interceptor to attach auth token if present
 api.interceptors.request.use(
@@ -40,6 +61,14 @@ api.interceptors.request.use(
 // Add response interceptor for error handling
 api.interceptors.response.use(
   (response) => {
+    // Validate response format
+    try {
+      validateResponse(response);
+    } catch (error) {
+      console.error("Response validation error:", error);
+      return Promise.reject(error);
+    }
+
     // Log successful responses for debugging
     console.log("API Response:", {
       status: response.status,

@@ -4,6 +4,11 @@
   environment = { NODE_VERSION = "18" }
 
 [[redirects]]
+  from = "/api/*"
+  to = "https://spotify-clone-api-v2.netlify.app/:splat"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
@@ -23,14 +28,12 @@
     Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
     Access-Control-Allow-Headers = "Content-Type, Authorization"
     Content-Security-Policy = """
-      default-src 'self' https://spotify-clobe.netlify.app;
+      default-src 'self' *;
       font-src 'self' data: https: *;
       img-src 'self' data: https: *;
       media-src 'self' data: https: *;
-      connect-src 'self' https://spotify-clobe.netlify.app https://api.cloudinary.com;
+      connect-src 'self' https://spotify-clone-api-v2.netlify.app https://api.cloudinary.com;
       style-src 'self' 'unsafe-inline' https:;
       script-src 'self' 'unsafe-inline' 'unsafe-eval' https:;
       worker-src 'self' blob:;
-      base-uri 'self';
-      form-action 'self';
     """
