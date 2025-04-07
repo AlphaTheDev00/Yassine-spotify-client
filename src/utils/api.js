@@ -6,7 +6,7 @@ const getBaseUrl = () => {
   
   if (isProd) {
     // In production, use the deployed API URL without the path
-    return "https://spotify-clone-api-v2.netlify.app";
+    return "https://musicfy-clone.netlify.app";
   } else {
     // In development, use relative URL (will be handled by Vite proxy)
     return "";

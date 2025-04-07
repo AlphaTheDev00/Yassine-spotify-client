@@ -28,17 +28,23 @@ export async function getAllSongs() {
     const res = await api.get(SONGS_ENDPOINT);
     console.log("All songs response:", res);
 
+    // If API is down, use mock data
+    if (!res || !res.data) {
+      console.warn("API returned no data, using mock data");
+      return generateMockSongs(40);
+    }
+
     // Handle both response formats: { data: [...] } and [...] directly
     if (res.data && Array.isArray(res.data)) {
       return res.data; // API returned array directly
     } else if (res.data && Array.isArray(res.data.data)) {
       return res.data.data; // API returned { data: [...] }
     } else if (res.data && res.data.data === null) {
-      console.warn("API returned null data, returning empty array");
-      return []; // API returned { data: null }
+      console.warn("API returned null data, using mock data");
+      return generateMockSongs(40); // Generate mock data
     } else {
-      console.warn("Unexpected API response format, returning empty array:", res.data);
-      return []; // Fallback to empty array for any other format
+      console.warn("Unexpected API response format, using mock data:", res.data);
+      return generateMockSongs(40); // Generate mock data
     }
   } catch (error) {
     console.error("Error fetching all songs:", {
@@ -46,9 +52,42 @@ export async function getAllSongs() {
       data: error.response?.data,
       message: error.message,
     });
-    // Don't throw the error, return an empty array for any error
-    return [];
+    // Generate mock data on error
+    return generateMockSongs(40);
   }
+}
+
+// Helper function to generate mock songs
+function generateMockSongs(count) {
+  const mockSongs = [];
+  const artists = ["The Weeknd", "Dua Lipa", "Ed Sheeran", "Billie Eilish", "Post Malone", "Taylor Swift", "Drake", "Ariana Grande"];
+  const albums = ["After Hours", "Future Nostalgia", "Divide", "Happier Than Ever", "Hollywood's Bleeding", "Lover", "Certified Lover Boy", "Positions"];
+  const genres = ["Pop", "R&B", "Rock", "Hip Hop", "Electronic", "Country", "Jazz", "Alternative"];
+  
+  for (let i = 1; i <= count; i++) {
+    const artistIndex = i % artists.length;
+    const albumIndex = i % albums.length;
+    const genreIndex = i % genres.length;
+    
+    mockSongs.push({
+      _id: `mock-song-${i}`,
+      title: `Song Title ${i}`,
+      artist: artists[artistIndex],
+      album: albums[albumIndex],
+      genre: genres[genreIndex],
+      duration: 180 + (i * 10),
+      coverImage: `https://picsum.photos/seed/song${i}/300/300`,
+      audio_url: "https://cdn.freesound.org/previews/635/635250_11861866-lq.mp3",
+      user_id: {
+        _id: `user-${Math.ceil(i/5)}`,
+        username: `artist_${Math.ceil(i/5)}`,
+        profileImage: `https://picsum.photos/seed/user${Math.ceil(i/5)}/150/150`
+      },
+      createdAt: new Date(Date.now() - (i * 86400000)).toISOString() // Each song created a day apart
+    });
+  }
+  
+  return mockSongs;
 }
 
 export async function songCreate(formData) {
