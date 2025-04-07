@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
 import styles from "./NavBar.module.css";
 import { GoHome, GoHomeFill } from "react-icons/go";
-import { FaMusic, FaSignOutAlt, FaHeart, FaList, FaBookmark } from "react-icons/fa";
+import { FaMusic, FaSignOutAlt } from "react-icons/fa";
 import { Avatar } from "@chakra-ui/react";
 import { removeToken } from "../../utils/auth";
 import { useAuth } from "../../hooks/useAuth";
@@ -33,27 +33,16 @@ export default function NavBar() {
         </NavLink>
         {user && (
           <>
-            <NavLink to="/liked-songs" className={styles.navLink}>
-              <FaHeart
+            <NavLink to="/songs/new" className={styles.navLink}>
+              <FaMusic
                 size={20}
                 color={
-                  location.pathname === "/liked-songs"
+                  location.pathname === "/songs/new"
                     ? "#1ed760"
                     : "currentColor"
                 }
               />
-              <span>Liked Songs</span>
-            </NavLink>
-            <NavLink to="/playlists" className={styles.navLink}>
-              <FaList
-                size={20}
-                color={
-                  location.pathname === "/playlists" || location.pathname.startsWith("/playlists/")
-                    ? "#1ed760"
-                    : "currentColor"
-                }
-              />
-              <span>My Playlists</span>
+              <span>Add Song</span>
             </NavLink>
           </>
         )}

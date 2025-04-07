@@ -1,11 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../../utils/auth";
+import { useAuth } from "../../hooks/useAuth";
 import "./sidebar.css";
-import { FaHome, FaSearch, FaHeart, FaPlus, FaList } from "react-icons/fa";
+import { FaHome, FaSearch, FaHeart, FaPlus, FaList, FaMusic, FaBookmark } from "react-icons/fa";
 
 const SideBar = () => {
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { user } = useAuth();
 
   return (
     <div className="sidebar">
@@ -29,25 +29,16 @@ const SideBar = () => {
           <FaSearch />
           <span>Search</span>
         </Link>
-        {isAuthenticated && (
+        {user && (
           <>
             <Link
-              to="/library"
+              to="/songs/new"
               className={`nav-link ${
-                location.pathname === "/library" ? "active" : ""
-              }`}
-            >
-              <FaList />
-              <span>Your Library</span>
-            </Link>
-            <Link
-              to="/create-playlist"
-              className={`nav-link ${
-                location.pathname === "/create-playlist" ? "active" : ""
+                location.pathname === "/songs/new" ? "active" : ""
               }`}
             >
               <FaPlus />
-              <span>Create Playlist</span>
+              <span>Add Song</span>
             </Link>
             <Link
               to="/liked-songs"
@@ -58,17 +49,26 @@ const SideBar = () => {
               <FaHeart />
               <span>Liked Songs</span>
             </Link>
+            <Link
+              to="/playlists"
+              className={`nav-link ${
+                location.pathname === "/playlists" || location.pathname.startsWith("/playlists/") ? "active" : ""
+              }`}
+            >
+              <FaBookmark />
+              <span>My Playlists</span>
+            </Link>
           </>
         )}
       </nav>
-      {isAuthenticated && (
+      {user && (
         <div className="playlists">
-          <h3>PLAYLISTS</h3>
-          <Link to="/playlist/1" className="playlist-link">
-            My Playlist #1
+          <h3>QUICK LINKS</h3>
+          <Link to="/" className="playlist-link">
+            All Songs
           </Link>
-          <Link to="/playlist/2" className="playlist-link">
-            My Playlist #2
+          <Link to="/liked-songs" className="playlist-link">
+            Liked Songs
           </Link>
         </div>
       )}
