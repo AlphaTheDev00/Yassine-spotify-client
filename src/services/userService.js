@@ -7,7 +7,8 @@ export const signup = async (userData) => {
     const { confirmPassword, isArtist, ...cleanUserData } = userData;
 
     console.log("Sending registration data:", cleanUserData);
-    const response = await api.post("/auth/register", cleanUserData);
+    // Use the correct path for the API endpoint
+    const response = await api.post("/.netlify/functions/api/auth/register", cleanUserData);
     console.log("Registration response:", response.data);
     // Return the full response data structure
     return response.data;
@@ -23,10 +24,10 @@ export const signup = async (userData) => {
 // Signin API Service
 export const signin = async (credentials) => {
   try {
-    console.log("Sending login request to:", "/auth/login");
+    console.log("Sending login request to:", "/.netlify/functions/api/auth/login");
     console.log("With credentials:", credentials);
 
-    const response = await api.post("/auth/login", credentials);
+    const response = await api.post("/.netlify/functions/api/auth/login", credentials);
 
     console.log("Login response:", response.data);
 

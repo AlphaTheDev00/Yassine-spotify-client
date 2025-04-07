@@ -5,13 +5,16 @@ const getBaseUrl = () => {
   const isProd = import.meta.env.PROD;
   
   if (isProd) {
-    // In production, use the deployed API URL
-    return "https://spotify-clone-api-v2.netlify.app/.netlify/functions/api";
+    // In production, use the deployed API URL without the path
+    return "https://spotify-clone-api-v2.netlify.app";
   } else {
     // In development, use relative URL (will be handled by Vite proxy)
     return "";
   }
 };
+
+// Log the base URL for debugging
+console.log("API Base URL:", getBaseUrl());
 
 const api = axios.create({
   baseURL: getBaseUrl(),
