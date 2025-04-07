@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../utils/auth";
-import styles from "./SideBar.module.css";
+import "./sidebar.css";
 import { FaHome, FaSearch, FaHeart, FaPlus, FaList } from "react-icons/fa";
 
 const SideBar = () => {
@@ -8,75 +8,71 @@ const SideBar = () => {
   const { isAuthenticated } = useAuth();
 
   return (
-    <nav className={styles.sidebar}>
-      <div className={styles.logo}>
-        <Link to="/">
-          <img src="/logo.png" alt="Spotify Clone" />
-        </Link>
+    <div className="sidebar">
+      <div className="logo">
+        <img src="/spotify-logo.png" alt="Spotify" />
       </div>
-
-      <ul className={styles.navLinks}>
-        <li className={styles.navItem}>
-          <Link
-            to="/"
-            className={`${styles.navLink} ${
-              location.pathname === "/" ? styles.active : ""
-            }`}
-          >
-            <FaHome className={styles.icon} />
-            <span>Home</span>
-          </Link>
-        </li>
-        <li className={styles.navItem}>
-          <Link
-            to="/search"
-            className={`${styles.navLink} ${
-              location.pathname === "/search" ? styles.active : ""
-            }`}
-          >
-            <FaSearch className={styles.icon} />
-            <span>Search</span>
-          </Link>
-        </li>
+      <nav className="nav-links">
+        <Link
+          to="/"
+          className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
+        >
+          <FaHome />
+          <span>Home</span>
+        </Link>
+        <Link
+          to="/search"
+          className={`nav-link ${
+            location.pathname === "/search" ? "active" : ""
+          }`}
+        >
+          <FaSearch />
+          <span>Search</span>
+        </Link>
         {isAuthenticated && (
           <>
-            <li className={styles.navItem}>
-              <Link
-                to="/liked-songs"
-                className={`${styles.navLink} ${
-                  location.pathname === "/liked-songs" ? styles.active : ""
-                }`}
-              >
-                <FaHeart className={styles.icon} />
-                <span>Liked Songs</span>
-              </Link>
-            </li>
-            <li className={styles.navItem}>
-              <Link
-                to="/songs/new"
-                className={`${styles.navLink} ${
-                  location.pathname === "/songs/new" ? styles.active : ""
-                }`}
-              >
-                <FaPlus className={styles.icon} />
-                <span>Add Song</span>
-              </Link>
-            </li>
-            <li className={styles.navItem}>
-              <Link
-                to="/playlists"
-                className={`${styles.navLink} ${
-                  location.pathname === "/playlists" ? styles.active : ""
-                }`}
-              >
-                <FaList className={styles.icon} />
-                <span>Your Playlists</span>
-              </Link>
-            </li>
+            <Link
+              to="/library"
+              className={`nav-link ${
+                location.pathname === "/library" ? "active" : ""
+              }`}
+            >
+              <FaList />
+              <span>Your Library</span>
+            </Link>
+            <Link
+              to="/create-playlist"
+              className={`nav-link ${
+                location.pathname === "/create-playlist" ? "active" : ""
+              }`}
+            >
+              <FaPlus />
+              <span>Create Playlist</span>
+            </Link>
+            <Link
+              to="/liked-songs"
+              className={`nav-link ${
+                location.pathname === "/liked-songs" ? "active" : ""
+              }`}
+            >
+              <FaHeart />
+              <span>Liked Songs</span>
+            </Link>
           </>
         )}
-      </ul>
-    </nav>
+      </nav>
+      {isAuthenticated && (
+        <div className="playlists">
+          <h3>PLAYLISTS</h3>
+          <Link to="/playlist/1" className="playlist-link">
+            My Playlist #1
+          </Link>
+          <Link to="/playlist/2" className="playlist-link">
+            My Playlist #2
+          </Link>
+        </div>
+      )}
+    </div>
   );
 };
 
