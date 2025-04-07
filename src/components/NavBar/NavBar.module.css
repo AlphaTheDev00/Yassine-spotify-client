@@ -32,6 +32,29 @@
   font-weight: bold;
   color: #fff;
   text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.logo:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.activeLogoLink {
+  color: #1ed760;
+}
+
+.activeIndicator {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 3px;
+  background-color: #1ed760;
+  border-radius: 3px;
 }
 
 .logoIcon {

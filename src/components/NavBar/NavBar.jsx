@@ -19,17 +19,10 @@ export default function NavBar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.navLeft}>
-        <div className={styles.logo}>
+        <NavLink to="/" className={styles.logo} activeClassName={styles.activeLogoLink}>
           <Logo size={24} className={styles.logoIcon} />
           <span>MusicFy</span>
-        </div>
-        <NavLink to="/" className={styles.navLink}>
-          {location.pathname === "/" ? (
-            <GoHomeFill size={22} />
-          ) : (
-            <GoHome size={22} />
-          )}
-          <span>Home</span>
+          {location.pathname === "/" && <div className={styles.activeIndicator} />}
         </NavLink>
         {user && (
           <>
