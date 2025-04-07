@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
+import { FaPlay, FaTrash } from "react-icons/fa";
 import { getLikedSongIds, removeLikedSong } from "../../utils/localLikedSongs";
 import { getAllSongs } from "../../services/songService";
 import { getSmartSongImage } from "../../services/smartPictureService";
@@ -89,25 +91,31 @@ export default function LikedSongs() {
         ) : (
           likedSongs.map((song) => (
             <div key={song._id} className={styles.songItem}>
-              <img
-                src={getSongImage(song)}
-                alt={song.title}
-                className={styles.songCover}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "https://via.placeholder.com/300x300?text=Music";
-                }}
-              />
-              <div className={styles.songInfo}>
-                <h3 className={styles.songTitle}>{song.title}</h3>
-                <p className={styles.artistName}>{song.user_id?.username || "Unknown Artist"}</p>
-              </div>
+              <Link to={`/songs/${song._id}`} className={styles.songLink}>
+                <img
+                  src={getSongImage(song)}
+                  alt={song.title}
+                  className={styles.songCover}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "https://picsum.photos/seed/" + song._id + "/300/300";
+                  }}
+                />
+                <div className={styles.songInfo}>
+                  <h3 className={styles.songTitle}>{song.title}</h3>
+                  <p className={styles.artistName}>{song.user_id?.username || "Unknown Artist"}</p>
+                </div>
+              </Link>
               <div className={styles.songActions}>
+                <Link to={`/songs/${song._id}`} className={styles.playButton}>
+                  <FaPlay />
+                </Link>
                 <button
                   className={styles.unlikeButton}
                   onClick={() => handleUnlikeSong(song._id)}
+                  title="Remove from liked songs"
                 >
-                  &hearts;
+                  <FaTrash />
                 </button>
               </div>
             </div>

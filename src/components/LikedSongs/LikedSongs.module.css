@@ -74,6 +74,7 @@
   padding: 15px;
   transition: all 0.3s ease;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 .songItem:hover {
@@ -93,11 +94,12 @@
 }
 
 .songCover {
-  width: 100%;
-  height: 100%;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
   border-radius: 6px;
   display: block;
+  margin-right: 15px;
 }
 
 .songInfo {
@@ -131,21 +133,54 @@
 .songActions {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .unlikeButton {
   background: none;
   border: none;
   color: #ff4d4f;
-  font-size: 24px;
+  font-size: 18px;
   cursor: pointer;
-  padding: 5px;
+  padding: 8px;
   transition: all 0.2s ease;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .unlikeButton:hover {
   transform: scale(1.2);
   color: #ff7875;
+  background-color: rgba(255, 77, 79, 0.2);
+}
+
+.songLink {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+}
+
+.playButton {
+  background: #1db954;
+  border: none;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playButton:hover {
+  transform: scale(1.2);
+  background: #1ed760;
 }
 
 /* Responsive adjustments */
