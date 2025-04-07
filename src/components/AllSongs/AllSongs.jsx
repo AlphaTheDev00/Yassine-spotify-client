@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaSearch, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import {
   useToast,
   Box,
@@ -15,6 +15,11 @@ import {
   Alert,
   AlertIcon,
   IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Button,
+  Flex,
 } from "@chakra-ui/react";
 import { getAllSongs } from "../../services/songService";
 import { getLikedSongIds, toggleLikedSong, addLikedSong, removeLikedSong } from "../../utils/localLikedSongs";
@@ -24,9 +29,13 @@ import styles from "./AllSongs.module.css";
 
 const AllSongs = () => {
   const [songs, setSongs] = useState([]);
+  const [filteredSongs, setFilteredSongs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [likedSongs, setLikedSongs] = useState(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const songsPerPage = 15;
   const { user } = useAuth();
   const toast = useToast();
 
@@ -41,9 +50,11 @@ const AllSongs = () => {
         // Ensure we always have an array of songs
         if (Array.isArray(songsData)) {
           setSongs(songsData);
+          setFilteredSongs(songsData);
         } else {
           console.warn("Unexpected data format from getAllSongs, using empty array");
           setSongs([]);
+          setFilteredSongs([]);
         }
         
         setError(null);
@@ -52,6 +63,7 @@ const AllSongs = () => {
         setError("Failed to load songs. Please try again later.");
         // Set empty array to prevent UI errors
         setSongs([]);
+        setFilteredSongs([]);
       } finally {
         setLoading(false);
       }
@@ -127,6 +139,46 @@ const AllSongs = () => {
     }
   };
 
+  // Handle search functionality
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredSongs(songs);
+      setCurrentPage(1);
+      return;
+    }
+    
+    const query = searchQuery.toLowerCase().trim();
+    const filtered = songs.filter(song => 
+      song.title.toLowerCase().includes(query) || 
+      (song.artist?.username && song.artist.username.toLowerCase().includes(query)) ||
+      (song.user_id?.username && song.user_id.username.toLowerCase().includes(query))
+    );
+    
+    setFilteredSongs(filtered);
+    setCurrentPage(1);
+  }, [searchQuery, songs]);
+
+  // Calculate pagination
+  const indexOfLastSong = currentPage * songsPerPage;
+  const indexOfFirstSong = indexOfLastSong - songsPerPage;
+  const currentSongs = filteredSongs.slice(indexOfFirstSong, indexOfLastSong);
+  const totalPages = Math.ceil(filteredSongs.length / songsPerPage);
+
+  // Handle page changes
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      window.scrollTo(0, 0);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      window.scrollTo(0, 0);
+    }
+  };
+
   if (loading) {
     return (
       <Box textAlign="center" py={10}>
@@ -148,7 +200,27 @@ const AllSongs = () => {
   return (
     <div className={styles.songsContainer}>
       <h2 className={styles.heading}>All Songs</h2>
-      {songs.length === 0 ? (
+      
+      <div className={styles.searchContainer}>
+        <InputGroup mb={4}>
+          <InputLeftElement pointerEvents="none">
+            <FaSearch color="gray.300" />
+          </InputLeftElement>
+          <Input 
+            placeholder="Search songs by title or artist"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            borderRadius="full"
+            bg="#2a2a2a"
+            color="white"
+            _placeholder={{ color: 'gray.400' }}
+            _hover={{ bg: '#333' }}
+            _focus={{ bg: '#333', borderColor: '#1db954' }}
+          />
+        </InputGroup>
+      </div>
+      
+      {filteredSongs.length === 0 ? (
         <Box textAlign="center" py={10}>
           <Text>No songs available</Text>
           <Text mt={2} fontSize="sm" color="gray.500">
@@ -157,7 +229,7 @@ const AllSongs = () => {
         </Box>
       ) : (
         <div className={styles.songGrid}>
-          {songs.map((song) => (
+          {currentSongs.map((song) => (
             <div key={song._id} className={styles.songCard}>
               <Link
                 to={`/songs/${song._id}`}
@@ -190,6 +262,37 @@ const AllSongs = () => {
             </div>
           ))}
         </div>
+      )}
+      
+      {/* Pagination controls */}
+      {filteredSongs.length > songsPerPage && (
+        <Flex justifyContent="center" mt={6} mb={4} className={styles.pagination}>
+          <Button 
+            onClick={goToPreviousPage} 
+            isDisabled={currentPage === 1}
+            mr={2}
+            leftIcon={<FaChevronLeft />}
+            bg="#2a2a2a"
+            color="white"
+            _hover={{ bg: '#1db954' }}
+          >
+            Previous
+          </Button>
+          <Text alignSelf="center" mx={4} color="white">
+            Page {currentPage} of {totalPages}
+          </Text>
+          <Button 
+            onClick={goToNextPage} 
+            isDisabled={currentPage === totalPages}
+            ml={2}
+            rightIcon={<FaChevronRight />}
+            bg="#2a2a2a"
+            color="white"
+            _hover={{ bg: '#1db954' }}
+          >
+            Next
+          </Button>
+        </Flex>
       )}
     </div>
   );

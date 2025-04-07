@@ -3,13 +3,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .heading {
   font-size: 28px;
   font-weight: bold;
   color: var(--chakra-colors-bg-inverted);
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   text-align: center;
 }
 
@@ -93,4 +96,27 @@
 
 .heartIcon:hover {
   color: #1ed760;
+}
+
+.searchContainer {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 30px auto;
+}
+
+.pagination {
+  margin-top: 30px;
+  padding: 15px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination button {
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.pagination button:hover {
+  transform: translateY(-2px);
 }
