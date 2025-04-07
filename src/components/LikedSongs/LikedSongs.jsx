@@ -18,12 +18,21 @@ export default function LikedSongs() {
     try {
       setIsLoading(true);
       
+      // Clear previous liked songs
+      setLikedSongs([]);
+      
+      // Only proceed if there's a user logged in
+      if (!user) {
+        console.log("No user logged in, not loading any liked songs");
+        return;
+      }
+      
       // Get all songs first
       const allSongs = await getAllSongs();
       console.log("All songs data:", allSongs);
       
       // Get liked song IDs from localStorage for the current user
-      const userId = user?.id || 'guest';
+      const userId = user.id || 'guest';
       console.log("Loading liked songs for user:", userId);
       const likedSongIds = getLikedSongIds(userId);
       console.log("Liked song IDs:", likedSongIds);
@@ -45,7 +54,7 @@ export default function LikedSongs() {
     } finally {
       setIsLoading(false);
     }
-  }, [toast]);
+  }, [toast, user]);
 
   useEffect(() => {
     loadLikedSongs();

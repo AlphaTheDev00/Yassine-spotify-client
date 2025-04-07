@@ -77,11 +77,19 @@ const AllSongs = () => {
     const loadLikedSongs = () => {
       try {
         console.log("Loading liked songs from localStorage...");
-        const userId = user?.id || 'guest';
-        console.log("Loading liked songs for user:", userId);
-        const likedSongsIds = getLikedSongIds(userId);
-        console.log("Loaded liked songs:", likedSongsIds);
-        setLikedSongs(likedSongsIds);
+        // Clear any previous liked songs when user changes
+        setLikedSongs(new Set());
+        
+        // Only load liked songs if there's a user
+        if (user) {
+          const userId = user.id || 'guest';
+          console.log("Loading liked songs for user:", userId);
+          const likedSongsIds = getLikedSongIds(userId);
+          console.log("Loaded liked songs:", likedSongsIds);
+          setLikedSongs(likedSongsIds);
+        } else {
+          console.log("No user logged in, not loading any liked songs");
+        }
       } catch (err) {
         console.error("Error loading liked songs from localStorage:", err);
         setLikedSongs(new Set());
@@ -254,6 +262,7 @@ const AllSongs = () => {
                 <button
                   className={styles.likeButton}
                   onClick={(e) => handleLikeToggle(e, song._id)}
+                  title={likedSongs.has(song._id) ? "Remove from favorites" : "Add to favorites"}
                 >
                   {likedSongs.has(song._id) ? (
                     <FaHeart className={styles.heartIcon} color="#1ed760" />
