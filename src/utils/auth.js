@@ -48,7 +48,7 @@ export const parseToken = (token) => {
     const base64Url = token.split(".")[1];
     if (!base64Url) return null;
 
-    // Convert base64 to plain text
+    // Convert base64Url to base64 and decode
     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
     const jsonPayload = decodeURIComponent(
       atob(base64)
@@ -62,4 +62,15 @@ export const parseToken = (token) => {
     console.error("Error parsing token:", error);
     return null;
   }
+};
+
+// Custom hook for authentication
+export const useAuth = () => {
+  const user = getUserFromToken();
+  const isAuthenticated = !!user;
+
+  return {
+    isAuthenticated,
+    user,
+  };
 };
