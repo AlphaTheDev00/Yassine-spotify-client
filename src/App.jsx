@@ -12,26 +12,63 @@ import Playlists from "./components/Playlists/Playlists";
 import SinglePlaylist from "./components/SinglePlaylist/SinglePlaylist";
 import LikedSongs from "./components/LikedSongs/LikedSongs";
 import MusicPictureShowcase from "./components/MusicPicture/MusicPictureShowcase";
+import { AuthProvider } from "./contexts/AuthProvider";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <NavBar />
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route element={<MainLayout />}>
           <Route path="/" element={<AllSongs />} />
-          <Route path="/songs/new" element={<CreateSong />} />
+          <Route
+            path="/songs/new"
+            element={
+              <ProtectedRoute>
+                <CreateSong />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/songs/:id" element={<SingleSong />} />
-          <Route path="/songs/:id/update" element={<UpdateSong />} />
-          <Route path="/playlists" element={<Playlists />} />
-          <Route path="/playlists/:id" element={<SinglePlaylist />} />
-          <Route path="/liked-songs" element={<LikedSongs />} />
+          <Route
+            path="/songs/:id/update"
+            element={
+              <ProtectedRoute>
+                <UpdateSong />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/playlists"
+            element={
+              <ProtectedRoute>
+                <Playlists />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/playlists/:id"
+            element={
+              <ProtectedRoute>
+                <SinglePlaylist />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/liked-songs"
+            element={
+              <ProtectedRoute>
+                <LikedSongs />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/music-pictures" element={<MusicPictureShowcase />} />
         </Route>
       </Routes>
-    </>
+    </AuthProvider>
   );
 }
 

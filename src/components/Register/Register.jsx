@@ -7,14 +7,12 @@ import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const { user, setUser } = useAuth();
-  console.log(user);
 
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
-    isArtist: false,
   });
 
   const [errors, setErrors] = useState({});
@@ -23,22 +21,59 @@ export default function Register() {
 
   const navigate = useNavigate();
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.username) {
+      newErrors.username = "Username is required";
+    } else if (formData.username.length < 3) {
+      newErrors.username = "Username must be at least 3 characters long";
+    }
+
+    if (!formData.email) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters long";
+    }
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setGeneralError("");
-    
+    setErrors({});
+
+    if (!validateForm()) {
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const data = await signup(formData);
-      
+
       if (data && data.token) {
         // 1. Set token to local storage
         setToken(data.token);
-        
+
         // 2. Decode the token, setting the user inside to the global user state (context)
         const userFromToken = getUserFromToken();
         setUser(userFromToken);
-        
+
         // 3. navigate to home page on sign in
         navigate("/");
       } else {
@@ -46,7 +81,7 @@ export default function Register() {
       }
     } catch (error) {
       console.error("Registration error:", error);
-      
+
       if (error.response && error.response.data) {
         if (error.response.data.errors) {
           setErrors(error.response.data.errors);
@@ -74,9 +109,7 @@ export default function Register() {
         <p>Create an account on MusicFy</p>
 
         {generalError && (
-          <div className={styles.errorAlert}>
-            {generalError}
-          </div>
+          <div className={styles.errorAlert}>{generalError}</div>
         )}
 
         <form onSubmit={handleSubmit}>
@@ -102,7 +135,7 @@ export default function Register() {
               type="email"
               name="email"
               id="email"
-              placeholder="Enter your email address"
+              placeholder="Enter your email"
               required
               onChange={handleChange}
               value={formData.email}
@@ -116,7 +149,7 @@ export default function Register() {
               type="password"
               name="password"
               id="password"
-              placeholder="Enter a password"
+              placeholder="Enter your password"
               required
               onChange={handleChange}
               value={formData.password}
@@ -132,7 +165,7 @@ export default function Register() {
               type="password"
               name="confirmPassword"
               id="confirmPassword"
-              placeholder="Re-type your password"
+              placeholder="Confirm your password"
               required
               onChange={handleChange}
               value={formData.confirmPassword}
@@ -144,11 +177,8 @@ export default function Register() {
 
           <button
             type="submit"
-            disabled={
-              isSubmitting ||
-              formData.password === "" ||
-              formData.password !== formData.confirmPassword
-            }
+            className={styles.submitButton}
+            disabled={isSubmitting}
           >
             {isSubmitting ? "Registering..." : "Register"}
           </button>

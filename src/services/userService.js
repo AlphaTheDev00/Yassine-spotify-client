@@ -1,53 +1,45 @@
-import axios from "axios";
-
-const BASE_URL = import.meta.env.VITE_API_URL + '/api/auth';
+import api from "../utils/api.js";
 
 // Signup API Service
-export const signup = async (formData) => {
+export const signup = async (userData) => {
   try {
-    const res = await axios.post(`${BASE_URL}/register`, formData);
-    return res.data;
+    // Remove confirmPassword and isArtist from the data
+    const { confirmPassword, isArtist, ...cleanUserData } = userData;
+
+    console.log("Sending registration data:", cleanUserData);
+    const response = await api.post("/api/auth/register", cleanUserData);
+    console.log("Registration response:", response.data);
+    return response.data;
   } catch (error) {
-    console.log(error);
-    // Return a standardized error object even if the server response is missing
-    if (error.response && error.response.data) {
-      throw error;
-    } else {
-      throw {
-        response: {
-          data: {
-            message: "Registration failed",
-            errors: {
-              general: "An unexpected error occurred. Please try again."
-            }
-          }
-        }
-      };
-    }
+    console.error(
+      "Signup error details:",
+      error.response?.data || error.message
+    );
+    throw error;
   }
 };
 
 // Signin API Service
-export const signin = async (formData) => {
+export const signin = async (credentials) => {
   try {
-    const res = await axios.post(`${BASE_URL}/login`, formData);
-    return res.data;
-  } catch (error) {
-    console.log(error);
-    // Return a standardized error object even if the server response is missing
-    if (error.response && error.response.data) {
-      throw error;
+    console.log("Sending login request to:", "/api/auth/login");
+    console.log("With credentials:", credentials);
+
+    const response = await api.post("/api/auth/login", credentials);
+
+    console.log("Login response:", response.data);
+
+    // Check if we have a valid response with user and token
+    if (response.data && response.data.user && response.data.token) {
+      return response.data;
     } else {
-      throw {
-        response: {
-          data: {
-            message: "Login failed",
-            errors: {
-              general: "An unexpected error occurred. Please try again."
-            }
-          }
-        }
-      };
+      throw new Error("Invalid response from server");
     }
+  } catch (error) {
+    console.error(
+      "Login error details:",
+      error.response?.data || error.message
+    );
+    throw error;
   }
 };

@@ -1,0 +1,3 @@
+/* /index.html 200
+/api/* https://musicfy-clone.netlify.app/.netlify/functions/api/:splat 200
+/auth/* https://musicfy-clone.netlify.app/.netlify/functions/api/:splat 200

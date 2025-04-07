@@ -1,9 +1,19 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { useToast, Box, Text, Spinner, Alert, AlertIcon } from "@chakra-ui/react";
+import {
+  useToast,
+  Box,
+  Text,
+  Spinner,
+  Alert,
+  AlertIcon,
+} from "@chakra-ui/react";
 import { useAuth } from "../../hooks/useAuth";
-import { addToLikedSongs, removeFromLikedSongs } from "../../services/likedSongsService";
+import {
+  addToLikedSongs,
+  removeFromLikedSongs,
+} from "../../services/likedSongsService";
 import { getAllSongs } from "../../services/songService";
 import { getSmartSongImage } from "../../services/smartPictureService";
 import api from "../../utils/api";
@@ -23,11 +33,32 @@ const AllSongs = () => {
         console.log("Fetching songs from API...");
         setLoading(true);
         const response = await getAllSongs();
-        console.log("Fetched Songs:", response.data);
-        setSongs(Array.isArray(response.data) ? response.data : []);
+        console.log("Fetched Songs Response:", response);
+
+        // Check if response has data property
+        if (response && response.data) {
+          const songsData = response.data;
+          // Handle different response formats
+          if (Array.isArray(songsData)) {
+            setSongs(songsData);
+          } else if (songsData.songs && Array.isArray(songsData.songs)) {
+            setSongs(songsData.songs);
+          } else {
+            console.error("Unexpected response format:", songsData);
+            throw new Error("Invalid response format from API");
+          }
+        } else {
+          throw new Error("No data received from API");
+        }
       } catch (err) {
         console.error("Error fetching songs:", err);
-        setError(err.message || "Failed to fetch songs");
+        // Don't redirect on 401 errors for the songs page
+        if (err.response?.status === 401) {
+          setError("Please log in to view all songs");
+          setSongs([]); // Clear songs array
+        } else {
+          setError(err.message || "Failed to fetch songs");
+        }
       } finally {
         setLoading(false);
       }
@@ -42,12 +73,20 @@ const AllSongs = () => {
       try {
         console.log("Fetching liked songs...");
         const response = await api.get("/api/users/liked-songs");
-        console.log("Liked songs response:", response.data);
-        const likedSongsIds = new Set(response.data.songs.map(song => song._id));
-        setLikedSongs(likedSongsIds);
+        console.log("Liked songs response:", response);
+
+        if (response?.data?.songs) {
+          const likedSongsIds = new Set(
+            response.data.songs.map((song) => song._id)
+          );
+          setLikedSongs(likedSongsIds);
+        }
       } catch (err) {
         console.error("Error fetching liked songs:", err);
-        // Don't set an error state here as it's not critical for the page to load
+        // Don't redirect on 401 errors for liked songs
+        if (err.response?.status === 401) {
+          setLikedSongs(new Set());
+        }
       }
     };
 
@@ -70,7 +109,7 @@ const AllSongs = () => {
     try {
       if (likedSongs.has(songId)) {
         await removeFromLikedSongs(songId);
-        setLikedSongs(prev => {
+        setLikedSongs((prev) => {
           const newSet = new Set(prev);
           newSet.delete(songId);
           return newSet;
@@ -83,7 +122,7 @@ const AllSongs = () => {
         });
       } else {
         await addToLikedSongs(songId);
-        setLikedSongs(prev => new Set([...prev, songId]));
+        setLikedSongs((prev) => new Set([...prev, songId]));
         toast({
           title: "Song added to liked songs",
           status: "success",
@@ -134,7 +173,10 @@ const AllSongs = () => {
         <div className={styles.songGrid}>
           {songs.map((song) => (
             <div key={song._id} className={styles.songCard}>
-              <Link to={`/songs/${song._id}`} className={styles.songCardContent}>
+              <Link
+                to={`/songs/${song._id}`}
+                className={styles.songCardContent}
+              >
                 <img
                   src={getSmartSongImage(song, 300, 300)}
                   alt={song.title}
@@ -142,6 +184,9 @@ const AllSongs = () => {
                 />
                 <div className={styles.songInfo}>
                   <h3 className={styles.songTitle}>{song.title}</h3>
+                  <p className={styles.artistName}>
+                    {song.artist?.username || "Unknown Artist"}
+                  </p>
                 </div>
               </Link>
               {user && (

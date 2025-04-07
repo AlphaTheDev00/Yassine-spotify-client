@@ -5,6 +5,7 @@ import { FaMusic, FaSignOutAlt, FaHeart } from "react-icons/fa";
 import { Avatar } from "@chakra-ui/react";
 import { removeToken } from "../../utils/auth";
 import { useAuth } from "../../hooks/useAuth";
+import Logo from "../Logo/Logo";
 
 export default function NavBar() {
   const location = useLocation();
@@ -19,7 +20,7 @@ export default function NavBar() {
     <nav className={styles.navbar}>
       <div className={styles.navLeft}>
         <div className={styles.logo}>
-          <FaMusic size={24} />
+          <Logo size={24} className={styles.logoIcon} />
           <span>MusicFy</span>
         </div>
         <NavLink to="/" className={styles.navLink}>
@@ -32,12 +33,19 @@ export default function NavBar() {
         </NavLink>
         {user && (
           <NavLink to="/liked-songs" className={styles.navLink}>
-            <FaHeart size={20} color={location.pathname === "/liked-songs" ? "#1ed760" : "currentColor"} />
+            <FaHeart
+              size={20}
+              color={
+                location.pathname === "/liked-songs"
+                  ? "#1ed760"
+                  : "currentColor"
+              }
+            />
             <span>Liked Songs</span>
           </NavLink>
         )}
       </div>
-      
+
       {user ? (
         <div className={styles.navRight}>
           <div className={styles.userInfo}>

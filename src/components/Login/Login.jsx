@@ -9,7 +9,7 @@ export default function Login() {
   const { refreshUser } = useAuth();
 
   const [formData, setFormData] = useState({
-    identifier: "",
+    email: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
@@ -34,7 +34,7 @@ export default function Login() {
     setIsSubmitting(true);
     setGeneralError("");
     setErrors({});
-    
+
     try {
       const data = await signin(formData);
 
@@ -44,7 +44,7 @@ export default function Login() {
       }
 
       setToken(data.token);
-      
+
       // Use the refreshUser function from context to update user state
       refreshUser();
 
@@ -54,7 +54,7 @@ export default function Login() {
       }, 100);
     } catch (error) {
       console.error("Login error:", error);
-      
+
       if (error.response && error.response.data) {
         if (error.response.data.errors) {
           setErrors(error.response.data.errors);
@@ -84,27 +84,23 @@ export default function Login() {
         <p>Welcome back to MusicFy</p>
 
         {generalError && (
-          <div className={styles.errorAlert}>
-            {generalError}
-          </div>
+          <div className={styles.errorAlert}>{generalError}</div>
         )}
 
         <form onSubmit={handleSubmit}>
           {/* Email */}
           <div className="input-control">
-            <label htmlFor="identifier">Email or Username</label>
+            <label htmlFor="email">Email</label>
             <input
-              type="text"
-              name="identifier"
-              id="identifier"
-              placeholder="Enter your email or username"
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Enter your email"
               required
               onChange={handleChange}
-              value={formData.identifier}
+              value={formData.email}
             />
-            {errors.identifier && (
-              <p className="error-message">{errors.identifier}</p>
-            )}
+            {errors.email && <p className="error-message">{errors.email}</p>}
           </div>
 
           {/* Password */}
@@ -123,10 +119,12 @@ export default function Login() {
               <p className="error-message">{errors.password}</p>
             )}
           </div>
-          
+
           <button
             type="submit"
-            disabled={isSubmitting || formData.identifier === "" || formData.password === ""}
+            disabled={
+              isSubmitting || formData.email === "" || formData.password === ""
+            }
           >
             {isSubmitting ? "Logging in..." : "Login"}
           </button>
