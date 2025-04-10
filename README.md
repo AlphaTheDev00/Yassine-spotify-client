@@ -516,8 +516,8 @@ Deploying both frontend and backend to Netlify taught me about environment confi
 ## 📱 Connect With Me
 
 - [GitHub](https://github.com/AlphaTheDev00)
-- [LinkedIn](https://linkedin.com/in/yassine-dev)
-- [Portfolio](https://yassine-dev.com)
+- [LinkedIn](https://www.linkedin.com/in/yassinechikar/)
+- [Portfolio](https://alphathedev00.github.io/)
 
 ---
 
